@@ -54,7 +54,9 @@ public class ValidateCodeFilter extends AbstractGatewayFilterFactory<Object>
             {
                 String rspStr = resolveBodyFromRequest(request);
                 JSONObject obj = JSON.parseObject(rspStr);
-                validateCodeService.checkCaptcha(obj.getString(CODE), obj.getString(UUID));
+                if(obj.getString("desktop") == null) {
+                    validateCodeService.checkCaptcha(obj.getString(CODE), obj.getString(UUID));
+                }
             }
             catch (Exception e)
             {
