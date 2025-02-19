@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bing.bing.mapper.LegalPendingMapper">
+    
+    <resultMap type="LegalPending" id="LegalPendingResult">
+        <result property="id"    column="id"    />
+        <result property="nameInBatchApprovalList"    column="name_in_batch_approval_list"    />
+        <result property="gpn"    column="gpn"    />
+        <result property="emailAddress"    column="email_address"    />
+        <result property="userName"    column="user_name"    />
+        <result property="lpn"    column="lpn"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectLegalPendingVo">
+        select id, name_in_batch_approval_list, gpn, email_address, user_name, lpn, create_time, update_time, create_by, update_by from legal_pending
+    </sql>
+
+    <select id="selectLegalPendingList" parameterType="LegalPending" resultMap="LegalPendingResult">
+        <include refid="selectLegalPendingVo"/>
+        <where>  
+            <if test="nameInBatchApprovalList != null  and nameInBatchApprovalList != ''"> and name_in_batch_approval_list = #{nameInBatchApprovalList}</if>
+            <if test="gpn != null  and gpn != ''"> and gpn = #{gpn}</if>
+            <if test="emailAddress != null  and emailAddress != ''"> and email_address = #{emailAddress}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="lpn != null  and lpn != ''"> and lpn = #{lpn}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+        </where>
+        order by id desc
+    </select>
+    
+    <select id="selectLegalPendingById" parameterType="Long" resultMap="LegalPendingResult">
+        <include refid="selectLegalPendingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLegalPending" parameterType="LegalPending" useGeneratedKeys="true" keyProperty="id">
+        insert into legal_pending
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nameInBatchApprovalList != null">name_in_batch_approval_list,</if>
+            <if test="gpn != null and gpn != ''">gpn,</if>
+            <if test="emailAddress != null and emailAddress != ''">email_address,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="lpn != null and lpn != ''">lpn,</if>
+            create_time,
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nameInBatchApprovalList != null">#{nameInBatchApprovalList},</if>
+            <if test="gpn != null and gpn != ''">#{gpn},</if>
+            <if test="emailAddress != null and emailAddress != ''">#{emailAddress},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="lpn != null and lpn != ''">#{lpn},</if>
+            sysdate(),
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLegalPending" parameterType="LegalPending">
+        update legal_pending
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nameInBatchApprovalList != null">name_in_batch_approval_list = #{nameInBatchApprovalList},</if>
+            <if test="gpn != null and gpn != ''">gpn = #{gpn},</if>
+            <if test="emailAddress != null and emailAddress != ''">email_address = #{emailAddress},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="lpn != null and lpn != ''">lpn = #{lpn},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            update_time = sysdate(),
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <insert id="bulkInsertLegalPending" parameterType="LegalPending">
+        INSERT INTO legal_pending
+        (name_in_batch_approval_list, gpn, email_address, user_name, lpn, create_time, create_by)
+        VALUES
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.nameInBatchApprovalList},UPPER(#{item.gpn}),#{item.emailAddress},#{item.userName},#{item.lpn}, now(), #{item.createBy})
+        </foreach>
+    </insert>
+<!--    <delete id="deleteLegalPendingById" parameterType="Long">-->
+<!--        delete from legal_pending where id = #{id}-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteLegalPendingByIds" parameterType="String">-->
+<!--        delete from legal_pending where id in -->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+</mapper>

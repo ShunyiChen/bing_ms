@@ -1,0 +1,18 @@
+# 基础镜像
+FROM cbs-acr-shanghai-registry.cn-shanghai.cr.aliyuncs.com/ns-shanghai/cbs-acr-shanghai:21-jdk
+# author
+MAINTAINER cbs
+# 解决docker控制台打印日期时区不对的问题
+# 设置环境变量TZ为Asia/Shanghai
+ENV TIME_ZONE=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TIME_ZONE /etc/localtime
+# 挂载目录
+VOLUME /home/cbs
+# 创建目录
+RUN mkdir -p /home/cbs
+# 指定路径
+WORKDIR /home/cbs
+# 复制jar文件到路径
+COPY ./jar/cbs-modules-gen.jar /home/cbs/cbs-modules-gen.jar
+# 启动代码生成服务
+ENTRYPOINT ["java","-jar","cbs-modules-gen.jar"]

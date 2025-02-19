@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingDestructionHistoryMapper">
+
+	<resultMap id="findFileHistoryResults" type="com.ruoyi.filingsystem.vo.FilingFileHistoryVO">
+		<result property="boxNumber"                  column="boxNumber"             />
+		<result property="oldSystemfileID"            column="oldSystemfileID"              />
+		<result property="clientGroupName"           column="clientGroupName"             />
+		<result property="clientCompanyName"          column="clientCompanyName"            />
+		<result property="fileType"  column="fileType"   />
+		<result property="fileDescription"            column="fileDescription"              />
+		<result property="retentionDate"             column="retentionDate"                />
+		<result property="auditReportDate"            column="auditReportDate"              />
+		<result property="destructionPeople"          column="DestructionPeople"              />
+		<result property="destructionTime"            column="DestructionTime"              />
+		<result property="areaLocation"            column="areaLocation"              />
+	</resultMap>
+	
+	<sql id="findFileHistoryQuery">
+	    select
+		  r.boxNumber,
+		  r.oldSystemfileID,
+		  r.clientGroupName,
+		  r.clientCompanyName,
+		  r.fileType,
+		  r.fileDescription,
+		  r.retentionDate,
+		  r.auditReportDate,
+		  r.DestructionPeople,
+		  r.DestructionTime,
+		  r.areaLocation
+		from
+		  filling_file_profile r
+    </sql>
+
+	<select id="findFileHistory"
+			parameterType="com.ruoyi.filingsystem.dto.DestructionHistorySearchDTO"
+			resultMap="findFileHistoryResults">
+		<include refid="findFileHistoryQuery"/>
+		<where>
+			r.fileState = 'DESTROYED'
+			<if test="fileID != null and fileID != ''">
+				AND r.oldSystemfileID = #{fileID}
+			</if>
+			<if test="deptId != null and deptId != ''">
+				AND r.dept_id = #{deptId}
+			</if>
+			<if test="fileType != null and fileType != ''">
+				AND r.fileType = #{fileType}
+			</if>
+			<if test="boxNumber != null and boxNumber != ''">
+				AND r.boxNumber like concat('%',#{boxNumber,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="retentionDateFrom != null and retentionDateFrom != ''">
+				AND CAST(r.retentionDate AS DATE) >= STR_TO_DATE(#{retentionDateFrom}, '%Y-%m-%d')
+			</if>
+			<if test="retentionDateTo != null and retentionDateTo != ''">
+				AND CAST(r.retentionDate AS DATE) &lt;= STR_TO_DATE(#{retentionDateTo}, '%Y-%m-%d')
+			</if>
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+		</where>
+	</select>
+
+	<resultMap id="findBoxHistoryResult" type="com.ruoyi.filingsystem.vo.FilingBoxHistoryVO" >
+		<result property="boxNumber" column="boxNumber"/>
+		<result property="fileIds"  column="fileIds"/>
+		<result property="destroyer"          column="Destroyer"              />
+		<result property="destroyTime"            column="DestroyTime"              />
+		<result property="areaLocation"            column="locationName"              />
+	</resultMap>
+
+	<sql id="findBoxHistoryQuery">
+		select T.boxNumber, T2.locationName, T.Destroyer,T.DestroyTime, GROUP_CONCAT(T.fileId ORDER BY T.fileId ASC) AS FileIDs from (
+		SELECT
+			ffbf.fileId,
+			CONCAT(ffb.boxPrefix, ffb.boxSuffix) AS boxNumber,
+			ffb.Destroyer AS Destroyer,
+			ffb.DestroyTime AS DestroyTime,
+			ffb.dept_id
+		FROM
+			filing_file_box ffb
+		INNER JOIN
+			filing_file_box_fileid ffbf ON ffb.boxID = ffbf.boxId
+		WHERE
+			ffb.Destroyer IS NOT NULL
+			AND ffb.DestroyTime IS NOT NULL
+			AND CONCAT(ffb.boxPrefix, ffb.boxSuffix) LIKE CONCAT('%', #{boxNumber}, '%')
+			<if test="deptId != null">
+				AND ffb.dept_id = #{deptId}
+			</if>
+			${params.dataScope}
+		) AS T inner join filing_location as T2 on T.dept_id = T2.dept_id
+		GROUP BY T.boxNumber, T2.locationName, T.Destroyer, T.DestroyTime
+	</sql>
+
+	<select id="findBoxHistory" parameterType="com.ruoyi.filingsystem.dto.DestructionHistorySearchDTO"
+			resultMap="findBoxHistoryResult">
+		<include refid="findBoxHistoryQuery"/>
+	</select>
+
+</mapper>

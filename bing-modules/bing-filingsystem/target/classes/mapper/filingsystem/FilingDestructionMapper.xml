@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingDestructionMapper">
+
+	<resultMap type="com.ruoyi.filingsystem.domain.FilingFileProfile" id="FileSearchResult">
+		<id property="oldSystemfileID"             column="oldSystemfileID"               />
+		<result property="boxNumber"           column="boxNumber"             />
+		<result property="oldSystemfileID"            column="oldSystemfileID"              />
+		<result property="clientGroupName"           column="clientGroupName"             />
+		<result property="clientCompanyName"          column="clientCompanyName"            />
+		<result property="fileType"  column="fileType"   />
+		<result property="retentionDate"             column="retentionDate"                />
+		<result property="auditReportDate"            column="auditReportDate"              />
+		<result property="fileDescription"            column="fileDescription"              />
+		<result property="avail"            column="avail"              />
+		<result property="fileState"            column="fileState"              />
+		<result property="isDPN"            column="isDPN"              />
+		<result property="isMoved"            column="isMoved"              />
+		<result property="areaLocation"            column="areaLocation"              />
+	</resultMap>
+	
+	<sql id="selectFileProfileVo">
+	    select
+		  r.boxNumber,
+		  r.oldSystemfileID,
+		  r.clientGroupName,
+		  r.clientCompanyName,
+		  r.fileType,
+		  r.retentionDate,
+		  r.auditReportDate,
+		  r.fileDescription,
+		  r.fileState,
+		  r.isDPN,
+		  r.isMoved,
+		  r.areaLocation,
+		  case
+			when ISNULL(r.borrower) or r.borrower = '' then (case when r.borrowState = 1 then 'No' else 'Yes' END)
+			else (case when r.borrowState = 1 then concat('No(Borrower: ', r.borrower,')') else 'Yes' END)
+		  end as avail
+		from
+		  filling_file_profile r
+    </sql>
+
+    <select id="findFileList" parameterType="com.ruoyi.filingsystem.dto.DestructionFileSearchDto" resultMap="FileSearchResult">
+		<include refid="selectFileProfileVo"/>
+		<where>
+			<if test="fileID != null and fileID != ''">
+				AND r.oldSystemfileID = #{fileID}
+			</if>
+			<if test="deptId != null and deptId != ''">
+				AND r.dept_id = #{deptId}
+			</if>
+			<if test="fileType != null and fileType != ''">
+				AND r.fileType = #{fileType}
+			</if>
+			<if test="boxNumber != null and boxNumber != ''">
+				AND r.boxNumber like concat('%',#{boxNumber,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="retentionDateFrom != null and retentionDateTo != null">
+				AND CAST(r.retentionDate AS DATE) BETWEEN #{retentionDateFrom, javaType=java.util.Date} AND #{retentionDateTo, javaType=java.util.Date}
+			</if>
+			<if test="includeDestructionRecords == false">
+				AND r.borrowState = 0
+				AND r.fileState NOT IN('DESTROYED','LOSE')
+				AND r.boxNumber != ''
+				AND r.boxNumber is not null
+				AND r.isDPN = 'N'
+				AND r.isMoved = 'N'
+			</if>
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+		</where>
+	</select>
+
+	<resultMap id="findBoxListResult" type="com.ruoyi.filingsystem.vo.FilingBoxFilesVO" >
+		<result property="boxID" column="boxID"/>
+		<result property="boxNumber" column="boxNumber"/>
+		<result property="fileIDs"  column="fileIDs"/>
+		<result property="boxPrefix"  column="boxPrefix"/>
+		<result property="boxSuffix"  column="boxSuffix"/>
+		<result property="isDPNs"  column="isDPNs"/>
+		<result property="borrowStates"  column="borrowStates"/>
+		<result property="fileStates"  column="fileStates"/>
+		<result property="isMoveds"  column="isMoveds"/>
+		<result property="areaLocation"  column="locationName"/>
+	</resultMap>
+
+	<sql id="selectBoxFileProfileVo">
+		select
+			ffb.boxID,
+			concat(ffb.boxPrefix, ffb.boxSuffix) as boxNumber,
+			ffb.boxPrefix,
+			ffb.boxSuffix,
+			ffb.dept_id as deptId,
+			fl.locationName
+		from
+			filing_file_box ffb
+		inner join filing_location fl on fl.dept_id = ffb.dept_id
+	</sql>
+
+	<select id="findBoxList" parameterType="com.ruoyi.filingsystem.dto.DestructionFileSearchDto"
+			resultMap="findBoxListResult">
+		<include refid="selectBoxFileProfileVo"/>
+		<where>
+			<if test="deptId != null and deptId != ''">
+				AND ffb.dept_id = #{deptId}
+			</if>
+			<if test="boxNumber != null and boxNumber != ''">
+				AND concat(ffb.boxPrefix, ffb.boxSuffix) LIKE CONCAT('%', #{boxNumber,jdbcType=VARCHAR}, '%')
+			</if>
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+		</where>
+	</select>
+
+	<select id="searchFileIDsByBoxNumber" parameterType="com.ruoyi.filingsystem.dto.SearchFileIDsDTO"
+			resultMap="findBoxListResult">
+		select
+			ffp.boxNumber,
+			ffp.dept_id as deptId,
+			GROUP_CONCAT(ffp.oldSystemfileID) as FileIDs,
+			GROUP_CONCAT(ffp.isDPN) as isDPNs,
+			GROUP_CONCAT(ffp.borrowState) as borrowStates,
+			GROUP_CONCAT(ffp.fileState) as fileStates,
+			GROUP_CONCAT(ffp.isMoved) as isMoveds
+		from
+			filling_file_profile ffp
+		where
+			<foreach collection="list" item="item" index="index"
+					 separator=" or " open="(" close=")">
+				(ffp.boxNumber = #{item.boxNumber}
+				and ffp.dept_id = #{item.deptId})
+			</foreach>
+		group by
+			ffp.boxNumber,ffp.dept_id
+	</select>
+
+	<update id="updateFileProfile" parameterType="com.ruoyi.filingsystem.dto.DestructionFileConfirmDto">
+		update filling_file_profile
+			set fileState = 'DESTROYED',
+				DestructionTime = NOW(),
+		        DestructionPeople = #{destructionPeople},
+				updatedTime = NOW()
+		where oldSystemfileID in
+		<foreach collection="fileIDs" item="fileID" open="(" separator="," close=")">
+			#{fileID}
+		</foreach>
+	</update>
+
+	<select id="findFileIDsByBoxes" parameterType="com.ruoyi.filingsystem.dto.DestructionBoxConfirmDTO"
+			resultType="java.lang.String">
+		select
+		    ffp.oldSystemfileID
+		from
+		    filling_file_profile ffp
+		where
+		    ffp.boxNumber in
+		<foreach collection="boxNumbers" item="boxNumber" open="(" separator="," close=")">
+			#{boxNumber}
+		</foreach>
+	</select>
+
+	<update id="updateFileBox" parameterType="com.ruoyi.filingsystem.dto.DestructionBoxConfirmDTO">
+		update
+			filing_file_box
+		set
+			Destroyer = #{destroyer},
+			DestroyTime = NOW()
+		where boxID in
+		<foreach collection="boxIds" item="boxID" open="(" separator="," close=")">
+			#{boxID}
+		</foreach>
+	</update>
+
+	<insert id="insertFileBoxFileID" parameterType="com.ruoyi.filingsystem.dto.DestructionBoxConfirmDTO">
+		insert into filing_file_box_fileid (boxId, fileId)
+		select
+			ffb.boxID as boxId,
+			ffp.oldSystemfileID as fileId
+		from
+			filling_file_profile ffp
+		left join filing_file_box ffb on
+			concat(ffb.boxPrefix, ffb.boxSuffix) = ffp.boxNumber
+		where
+			ffp.boxNumber in
+		<foreach collection="boxNumbers" item="boxNum" open="(" separator="," close=")">
+			#{boxNum}
+		</foreach>
+	</insert>
+
+</mapper>

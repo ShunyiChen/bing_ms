@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingEditHistoryMapper">
+
+    <resultMap id="fetchEditHistoryListResult" type="com.ruoyi.filingsystem.vo.FilingEditHistoryVO">
+        <result property="deptId"    column="dept_id"    />
+        <result property="fileID"    column="fileID"    />
+        <result property="oldSystemfileID"    column="oldSystemfileID"    />
+        <result property="clientGroupName"    column="clientGroupName"    />
+        <result property="clientCompanyName"    column="clientCompanyName"    />
+        <result property="clientNumber"    column="clientNumber"    />
+        <result property="fileType"    column="fileType"    />
+        <result property="fileremarks"    column="fileremarks"    />
+        <result property="moveTo"    column="moveTo"    />
+        <result property="yearEndDate"    column="yearEndDate"    />
+        <result property="auditReportDate"    column="auditReportDate"    />
+        <result property="retentionDate"    column="retentionDate"    />
+        <result property="creationDate"    column="creationDate"    />
+        <result property="engagementNumber"    column="engagementNumber"    />
+        <result property="engagementEIC"    column="engagementEIC"    />
+        <result property="engagementPartner"    column="engagementPartner"    />
+        <result property="engagementEICEmail"    column="engagementEICEmail"    />
+        <result property="engagementPartnerEmail"    column="engagementPartnerEmail"    />
+        <result property="barCode"    column="barCode"    />
+        <result property="borrowState"    column="borrowState"    />
+        <result property="borrowerStaffId"    column="borrowerStaffId"    />
+        <result property="borrower"    column="borrower"    />
+        <result property="DestructionTime"    column="DestructionTime"    />
+        <result property="DestructionPeople"    column="DestructionPeople"    />
+        <result property="requesterName"    column="requesterName"    />
+        <result property="requestDate"    column="requestDate"    />
+        <result property="staffId" column="staffId"    />
+        <result property="retentionPeriod" column="retentionPeriod"    />
+        <result property="isDPN" column="isDPN"    />
+        <result property="isMoved" column="isMoved"    />
+        <result property="fileDescription"    column="fileDescription"    />
+        <result property="areaLocation"    column="areaLocation"    />
+        <result property="boxNumber"    column="boxNumber"    />
+        <result property="editor"    column="Editor"    />
+        <result property="action"    column="action"    />
+        <result property="updateTime"    column="updateTime"    />
+    </resultMap>
+
+    <sql id="fetchEditHistoryListQuery">
+        SELECT
+            ffor.fileID,
+            ffor.oldSystemfileID,
+            ffor.oldSystemFileMark,
+            ffor.dept_id,
+            ffor.areaLocation,
+            ffor.fileState,
+            ffor.fileDescription,
+            ffor.clientGroupName,
+            ffor.clientNumber,
+            ffor.clientCompanyName,
+            ffor.boxNumber,
+            ffor.fileType,
+            ffor.fileremarks,
+            ffor.moveTo,
+            ffor.isMoved,
+            CASE
+                WHEN
+                    ISNULL(ffor.borrower) OR ffor.borrower = ''
+                THEN
+                    (CASE
+                        WHEN ffor.borrowState = 1 THEN 'No'
+                        ELSE 'Yes'
+                    END)
+                ELSE (CASE
+                        WHEN ffor.borrowState = 1 THEN CONCAT('No(Borrower: ', ffor.borrower, ')')
+                        ELSE 'Yes'
+                END)
+            END AS avail,
+            ffor.yearEndDate,
+            ffor.auditReportDate,
+            ffor.retentionDate,
+            ffor.creationDate,
+            ffor.engagementNumber,
+            ffor.engagementEIC,
+            ffor.engagementPartner,
+            ffor.barCode,
+            ffor.borrowerStaffId,
+            ffor.borrower,
+            ffor.DestructionTime,
+            ffor.DestructionPeople,
+            ffor.engagementEICEmail,
+            ffor.engagementPartnerEmail,
+            ffor.ccId,
+            ffor.isDPN,
+            ffor.staffId,
+            ffor.requesterName,
+            ffor.retentionPeriod,
+            ffor.Editor,
+            ffor.action,
+            ffor.UpdateTime
+        FROM
+            filling_file_operation_record ffor
+    </sql>
+    <select id="fetchEditHistoryList" parameterType="com.ruoyi.filingsystem.dto.FetchEditHistoryDTO"
+            resultMap="fetchEditHistoryListResult">
+        <include refid="fetchEditHistoryListQuery"/>
+        <where>
+            <if test="deptId != null and deptId != ''"> and ffor.dept_id = #{deptId}</if>
+            <if test="fileIDFrom != null and fileIDFrom != ''"> AND ffor.oldSystemfileID >= #{fileIDFrom}</if>
+            <if test="fileIDFromTo != null and fileIDFromTo != ''"> AND ffor.oldSystemfileID &lt;= #{fileIDFromTo}</if>
+            <if test="areaLocation != null  and areaLocation != ''"> and ffor.areaLocation = #{areaLocation}</if>
+            <if test="fileDescription != null and fileDescription != ''">
+                <!-- 使用 CONCAT 函数将 % 符号添加到查询参数的两端，实现模糊匹配 -->
+                and ffor.fileDescription LIKE CONCAT('%', #{fileDescription}, '%')
+            </if>
+            <if test="clientGroupName != null and clientGroupName != ''">
+                <!-- 使用 CONCAT 函数将 % 符号添加到查询参数的两端，实现模糊匹配 -->
+                and ffor.clientGroupName LIKE CONCAT('%', #{clientGroupName}, '%')
+            </if>
+            <if test="clientNumber != null  and clientNumber != ''"> and ffor.clientNumber = #{clientNumber}</if>
+            <if test="boxNumber != null  and boxNumber != ''"> and ffor.boxNumber = #{boxNumber}</if>
+            <if test="fileType != null  and fileType != ''"> and ffor.fileType = #{fileType}</if>
+            <if test="clientCompanyName != null and clientCompanyName != ''">
+                <!-- 使用 CONCAT 函数将 % 符号添加到查询参数的两端，实现模糊匹配 -->
+                and ffor.clientCompanyName LIKE CONCAT('%', #{clientCompanyName}, '%')
+            </if>
+            <if test="fileremarks != null and fileremarks != ''">
+                <!-- 使用 CONCAT 函数将 % 符号添加到查询参数的两端，实现模糊匹配 -->
+                and ffor.fileremarks LIKE CONCAT('%', #{fileremarks}, '%')
+            </if>
+            <choose>
+                <!-- 查询区间 -->
+                <when test="yearEndDateFrom != null and yearEndDateTo != null">
+                    AND CAST(ffor.yearEndDate AS DATE) BETWEEN #{yearEndDateFrom, javaType=java.util.Date} AND #{yearEndDateTo, javaType=java.util.Date}
+                </when>
+            </choose>
+            <choose>
+                <!-- 查询区间 -->
+                <when test="auditReportDateFrom != null and auditReportDateTo != null">
+                    AND CAST(ffor.auditReportDate AS DATE) BETWEEN #{auditReportDateFrom, javaType=java.util.Date} AND #{auditReportDateTo, javaType=java.util.Date}
+                </when>
+            </choose>
+            <choose>
+                <!-- 查询区间 -->
+                <when test="retentionDateFrom != null and retentionDateTo != null">
+                    AND CAST(ffor.retentionDate AS DATE) BETWEEN STR_TO_DATE(#{retentionDateFrom}, '%Y-%m-%d') AND STR_TO_DATE(#{retentionDateTo}, '%Y-%m-%d')
+                </when>
+            </choose>
+            <choose>
+                <!-- 查询区间 -->
+                <when test="creationDateFrom != null and creationDateTo != null">
+                    AND CAST(ffor.creationDate AS DATE) BETWEEN #{creationDateFrom, javaType=java.util.Date} AND #{creationDateTo, javaType=java.util.Date}
+                </when>
+            </choose>
+            <choose>
+                <when test="updatedTimeFrom != null and updatedTimeTo != null">
+                    AND CAST(ffor.UpdateTime AS DATETIME) BETWEEN #{updatedTimeFrom, javaType=java.util.Date} AND #{updatedTimeTo, javaType=java.util.Date}
+                </when>
+            </choose>
+            <if test="staffId != null and staffId != ''"> and ffor.staffId = #{staffId}</if>
+            <if test="requesterName != null and requesterName != ''"> and ffor.requesterName = #{requesterName}</if>
+            <if test="ccId != null and ccId != ''"> and ffor.ccId = #{ccId}</if>
+            <if test="isDPN != null and isDPN != ''"> and ffor.isDPN = #{isDPN}</if>
+            <if test="engagementEICEmail != null  and engagementEICEmail != ''"> and ffor.engagementEICEmail LIKE CONCAT('%', #{engagementEICEmail}, '%')</if>
+            <if test="engagementPartnerEmail != null  and engagementPartnerEmail != ''"> and ffor.engagementPartnerEmail LIKE CONCAT('%', #{engagementPartnerEmail}, '%')</if>
+            <if test="borrowState != null and borrowState == '0'.toString()"> and ffor.borrowState = '0' AND ffor.fileState NOT IN ('LOSE','DESTROYED')</if>
+            <if test="borrowState != null and borrowState == '1'.toString()"> and (ffor.borrowState = '1' OR ffor.fileState IN ('LOSE','DESTROYED'))</if>
+            <if test="fileState != null  and fileState != ''"> and ffor.fileState = #{fileState}</if>
+            <if test="engagementNumber != null  and engagementNumber != ''"> and ffor.engagementNumber = #{engagementNumber}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        order by ffor.dept_id, ffor.oldSystemfileID+0
+    </select>
+    <select id="fetchEditHistoryBorrowStates" parameterType="com.ruoyi.filingsystem.dto.FetchEditHistoryBorrowStatesDTO"
+            resultMap="fetchEditHistoryListResult">
+        select
+            ffp.oldSystemfileID,
+            ffp.dept_id,
+            ffp.borrowState
+        from filling_file_profile ffp
+        <where>
+            <foreach collection="list" item="item" index="index"
+                     separator=" or " open="(" close=")">
+                (ffp.oldSystemfileID = #{item.oldSystemfileID}
+                and ffp.dept_id = #{item.deptId})
+            </foreach>
+        </where>
+    </select>
+    <resultMap id="getHistoryByHistIDResults" type="com.ruoyi.filingsystem.domain.FilingFileProfile">
+        <result property="fileID"    column="fileID"    />
+        <result property="oldSystemfileID"    column="oldSystemfileID"    />
+        <result property="oldSystemFileMark"    column="oldSystemFileMark"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="areaLocation"    column="areaLocation"    />
+        <result property="fileState"    column="fileState"    />
+        <result property="fileDescription"    column="fileDescription"    />
+        <result property="clientGroupName"    column="clientGroupName"    />
+        <result property="clientNumber"    column="clientNumber"    />
+        <result property="clientCompanyName"    column="clientCompanyName"    />
+        <result property="boxNumber"    column="boxNumber"    />
+        <result property="fileType"    column="fileType"    />
+        <result property="fileremarks"    column="fileremarks"    />
+        <result property="moveTo"    column="moveTo"    />
+        <result property="yearEndDate"    column="yearEndDate"    />
+        <result property="auditReportDate"    column="auditReportDate"    />
+        <result property="retentionDate"    column="retentionDate"    />
+        <result property="creationDate"    column="creationDate"    />
+        <result property="engagementNumber"    column="engagementNumber"    />
+        <result property="engagementEIC"    column="engagementEIC"    />
+        <result property="engagementPartner"    column="engagementPartner"    />
+        <result property="engagementEICEmail"    column="engagementEICEmail"    />
+        <result property="engagementPartnerEmail"    column="engagementPartnerEmail"    />
+        <result property="barCode"    column="barCode"    />
+        <result property="borrowState"    column="borrowState"    />
+        <result property="borrowerStaffId"    column="borrowerStaffId"    />
+        <result property="borrower"    column="borrower"    />
+        <result property="DestructionTime"    column="DestructionTime"    />
+        <result property="DestructionPeople"    column="DestructionPeople"    />
+        <result property="requesterName"    column="requesterName"    />
+        <result property="requestDate"    column="requestDate"    />
+        <result property="staffId" column="staffId"    />
+        <result property="retentionPeriod" column="retentionPeriod"    />
+        <result property="isDPN" column="isDPN"    />
+        <result property="isMoved" column="isMoved"    />
+    </resultMap>
+
+    <select id="getHistoryByHistID" parameterType="java.lang.Long" resultMap="getHistoryByHistIDResults">
+        <include refid="fetchEditHistoryListQuery"/>
+        <where>
+            ffor.fileID = #{histID}
+        </where>
+    </select>
+
+    <update id="recover" parameterType="com.ruoyi.filingsystem.dto.RecoverDTO">
+        update
+            filling_file_profile ffp
+        left join
+        (
+            select
+                fileID,
+                oldSystemfileID,
+                oldSystemFileMark,
+                dept_id,
+                areaLocation,
+                fileState,
+                fileDescription,
+                clientGroupName,
+                clientNumber,
+                clientCompanyName,
+                boxNumber,
+                fileType,
+                fileremarks,
+                moveTo,
+                isMoved,
+                yearEndDate,
+                auditReportDate,
+                retentionDate,
+                creationDate,
+                engagementNumber,
+                engagementEIC,
+                engagementPartner,
+                barCode,
+                borrowState,
+                borrowerStaffId,
+                borrower,
+                DestructionTime,
+                DestructionPeople,
+                engagementEICEmail,
+                engagementPartnerEmail,
+                ccId,
+                isDPN,
+                staffId,
+                requesterName,
+                requestDate,
+                retentionPeriod
+            from
+                filling_file_operation_record
+        ) as ffor
+        on
+            ffp.oldSystemfileID = ffor.oldSystemfileID
+        set
+            ffp.oldSystemfileID = ffor.oldSystemfileID,
+            ffp.oldSystemFileMark = ffor.oldSystemFileMark,
+            ffp.dept_id = ffor.dept_id,
+            ffp.areaLocation = ffor.areaLocation,
+            ffp.fileState = ffor.fileState,
+            ffp.fileDescription = ffor.fileDescription,
+            ffp.clientGroupName = ffor.clientGroupName,
+            ffp.clientNumber = ffor.clientNumber,
+            ffp.clientCompanyName = ffor.clientCompanyName,
+            ffp.boxNumber = ffor.boxNumber,
+            ffp.fileType = ffor.fileType,
+            ffp.fileremarks = ffor.fileremarks,
+            ffp.moveTo = ffor.moveTo,
+            ffp.isMoved = ffor.isMoved,
+            ffp.yearEndDate = ffor.yearEndDate,
+            ffp.auditReportDate = ffor.auditReportDate,
+            ffp.retentionDate = ffor.retentionDate,
+            ffp.creationDate = ffor.creationDate,
+            ffp.engagementNumber = ffor.engagementNumber,
+            ffp.engagementEIC = ffor.engagementEIC,
+            ffp.engagementPartner = ffor.engagementPartner,
+            ffp.barCode = ffor.barCode,
+            ffp.borrowState = 0,
+            ffp.borrowerStaffId = '',
+            ffp.borrower = '',
+            ffp.DestructionTime = ffor.DestructionTime,
+            ffp.DestructionPeople = ffor.DestructionPeople,
+            ffp.engagementEICEmail = ffor.engagementEICEmail,
+            ffp.engagementPartnerEmail = ffor.engagementPartnerEmail,
+            ffp.ccId = ffor.ccId,
+            ffp.isDPN = ffor.isDPN,
+            ffp.staffId = ffor.staffId,
+            ffp.requesterName = ffor.requesterName,
+            ffp.requestDate = ffor.requestDate,
+            ffp.retentionPeriod = ffor.retentionPeriod
+        where ffor.fileID = #{histID}
+    </update>
+</mapper>

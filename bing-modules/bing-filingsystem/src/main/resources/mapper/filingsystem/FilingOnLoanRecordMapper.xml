@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingOnLoanRecordMapper">
+
+    <resultMap id="fetchOnLoanRecordListResult" type="com.ruoyi.filingsystem.vo.FilingOnLoanRecordVO">
+        <result property="oldSystemfileID"    column="oldSystemfileID"    />
+        <result property="clientGroupName"    column="clientGroupName"    />
+        <result property="clientCompanyName"    column="clientCompanyName"    />
+        <result property="clientNumber"    column="clientNumber"    />
+        <result property="fileType"    column="fileType"    />
+        <result property="yearEndDate"    column="yearEndDate"    />
+        <result property="auditReportDate"    column="auditReportDate"    />
+        <result property="retentionDate"    column="retentionDate"    />
+        <result property="expireDate"    column="expireDate"    />
+        <result property="fileDescription"    column="fileDescription"    />
+        <result property="staffName"    column="StaffName"    />
+        <result property="staffId"    column="StaffId"    />
+        <result property="borrowDate"    column="LoanDate"    />
+        <result property="areaLocation"    column="areaLocation"    />
+        <result property="boxNumber"    column="boxNumber"    />
+        <result property="fileremarks"    column="fileremarks"    />
+    </resultMap>
+
+    <sql id="fetchOnLoanRecordListQuery">
+        select
+            fb.StaffName,
+            fb.StaffId,
+            fb.LoanDate,
+            DATE_SUB(CAST(fb.LoanDate AS DATETIME), INTERVAL -6 MONTH) AS expireDate,
+            ffp.oldSystemfileID,
+            ffp.clientGroupName,
+            ffp.clientCompanyName,
+            ffp.clientNumber,
+            ffp.fileType,
+            ffp.yearEndDate,
+            ffp.auditReportDate,
+            ffp.retentionDate,
+            ffp.fileDescription,
+            ffp.areaLocation,
+            ffp.boxNumber,
+            ffp.fileremarks
+        from
+            filling_borrowrecord fb
+        left join filling_file_profile ffp on
+            fb.FileID = ffp.oldSystemfileID
+            and fb.dept_id = ffp.dept_id
+    </sql>
+    <select id="fetchOnLoanRecordList" parameterType="com.ruoyi.filingsystem.dto.FetchOnLoanRecordDTO"
+            resultMap="fetchOnLoanRecordListResult">
+        <include refid="fetchOnLoanRecordListQuery"/>
+        <where>
+            fb.Status = 1
+            <if test="deptId != null and deptId != ''">
+                AND fb.dept_id = #{deptId}
+            </if>
+            <if test="fileID != null and fileID != ''"> AND ffp.oldSystemfileID = #{fileID}</if>
+            <if test="fileType != null and fileType != ''"> AND ffp.fileType = #{fileType}</if>
+            <if test="clientCompanyName != null and clientCompanyName != ''"> AND ffp.clientCompanyName = #{clientCompanyName}</if>
+            <if test="clientNumber != null and clientNumber != ''"> AND ffp.clientNumber = #{clientNumber}</if>
+            <if test="fileremarks != null and fileremarks != ''"> AND ffp.fileremarks = #{fileremarks}</if>
+            <if test="fileDescription != null and fileDescription != ''"> AND ffp.fileDescription = #{fileDescription}</if>
+            <if test="clientGroupName != null and clientGroupName != ''"> AND ffp.clientGroupName = #{clientGroupName}</if>
+            <if test="borrowerStaffId != null and borrowerStaffId != ''"> AND fb.StaffId = #{borrowerStaffId}</if>
+            <if test="borrower != null and borrower != ''"> AND fb.StaffName = #{borrower}</if>
+            <choose>
+                <!-- 查询区间 -->
+                <when test="borrowDateFrom != null and borrowDateTo != null">
+                    AND CAST(fb.LoanDate AS DATE) BETWEEN #{borrowDateFrom, javaType=java.util.Date} AND #{borrowDateTo, javaType=java.util.Date}
+                </when>
+            </choose>
+            <choose>
+                <!-- 查询区间 -->
+                <when test="retentionDateFrom != null and retentionDateTo != null">
+                    AND CAST(ffp.retentionDate AS DATE) BETWEEN #{retentionDateFrom, javaType=java.util.Date} AND #{retentionDateTo, javaType=java.util.Date}
+                </when>
+            </choose>
+            <choose>
+                <!-- 查询区间 -->
+                <when test="expireDateFrom != null and expireDateTo != null">
+                    AND DATE_SUB(CAST(fb.LoanDate AS DATE), INTERVAL -6 MONTH) BETWEEN #{expireDateFrom, javaType=java.util.Date} AND #{expireDateTo, javaType=java.util.Date}
+                </when>
+            </choose>
+            <choose>
+                <!-- 查询区间 -->
+                <when test="auditReportDateFrom != null and auditReportDateTo != null">
+                    AND CAST(ffp.auditReportDate AS DATE) BETWEEN #{auditReportDateFrom, javaType=java.util.Date} AND #{auditReportDateTo, javaType=java.util.Date}
+                </when>
+            </choose>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        ORDER BY fb.LoanDate
+    </select>
+</mapper>

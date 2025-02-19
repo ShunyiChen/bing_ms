@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingBoxOperationRecordMapper">
+
+    <resultMap type="com.ruoyi.filingsystem.domain.FilingBoxOperationRecord" id="FilingBoxOperationRecordResult">
+        <result property="id"    column="id"    />
+        <result property="oldSystemboxMark"    column="oldSystemboxMark"    />
+        <result property="boxDepartment"    column="boxDepartment"    />
+        <result property="boxNumber"    column="boxNumber"    />
+        <result property="vendorNumber"    column="vendorNumber"    />
+        <result property="vendorBarcode"    column="vendorBarcode"    />
+        <result property="retentionDate"    column="retentionDate"    />
+        <result property="chargeCode"    column="chargeCode"    />
+        <result property="approvedStaffIdLpn"    column="approvedStaffIdLpn"    />
+        <result property="insertPeopleEmail"    column="insertPeopleEmail"    />
+        <result property="approverEmail"    column="approverEmail"    />
+        <result property="supportingDocument"    column="supportingDocument"    />
+        <result property="staffidLpn"    column="StaffId_lpn"    />
+        <result property="requesterEmail"    column="requesterEmail"    />
+        <result property="boxState"    column="boxState"    />
+        <result property="areaLocation"    column="areaLocation"    />
+        <result property="borrowState"    column="borrowState"    />
+        <result property="borrowerStaffId"    column="borrowerStaffId"    />
+        <result property="borrowerName"    column="borrowerName"    />
+        <result property="destructionTime"    column="destructionTime"    />
+        <result property="destructionPeople"    column="destructionPeople"    />
+        <result property="creationDate"    column="creationDate"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="editor"    column="editor"    />
+        <result property="action"    column="action"    />
+        <result property="updateDate"    column="updateDate"    />
+        <result property="accountCode"    column="accountCode"    />
+        <result property="boxRemark"    column="boxRemark"    />
+    </resultMap>
+
+    <sql id="selectFilingBoxOperationRecordVo">
+        select id, oldSystemboxMark, boxDepartment, boxNumber, vendorNumber, vendorBarcode, retentionDate, chargeCode, ApprovedStaffid_Lpn, insertPeopleEmail, approverEmail, supportingDocument, StaffId_lpn, requesterEmail, boxState, areaLocation, borrowState, borrowerStaffId, borrowerName, destructionTime, destructionPeople, creationDate, dept_id, editor, action, updateDate,accountCode,boxRemark from filing_box_operation_record
+    </sql>
+
+    <select id="selectFilingBoxOperationRecordList" parameterType="com.ruoyi.filingsystem.domain.FilingBoxOperationRecord" resultMap="FilingBoxOperationRecordResult">
+        <include refid="selectFilingBoxOperationRecordVo"/>
+        <where>
+            <if test="oldSystemboxMark != null "> and oldSystemboxMark = #{oldSystemboxMark}</if>
+            <if test="boxDepartment != null  and boxDepartment != ''"> and boxDepartment = #{boxDepartment}</if>
+            <if test="boxNumber != null  and boxNumber != ''"> and boxNumber = #{boxNumber}</if>
+            <if test="vendorNumber != null  and vendorNumber != ''"> and vendorNumber = #{vendorNumber}</if>
+            <if test="vendorBarcode != null  and vendorBarcode != ''"> and vendorBarcode = #{vendorBarcode}</if>
+            <if test="retentionDate != null  and retentionDate != ''"> and retentionDate = #{retentionDate}</if>
+            <if test="chargeCode != null  and chargeCode != ''"> and chargeCode = #{chargeCode}</if>
+            <if test="approvedStaffIdLpn != null  and approvedStaffIdLpn != ''"> and approvedStaffIdLpn = #{approvedStaffIdLpn}</if>
+            <if test="insertPeopleEmail != null  and insertPeopleEmail != ''"> and insertPeopleEmail = #{insertPeopleEmail}</if>
+            <if test="approverEmail != null  and approverEmail != ''"> and approverEmail = #{approverEmail}</if>
+            <if test="supportingDocument != null  and supportingDocument != ''"> and supportingDocument = #{supportingDocument}</if>
+            <if test="staffidLpn != null  and staffidLpn != ''"> and StaffId_lpn = #{staffidLpn}</if>
+            <if test="requesterEmail != null  and requesterEmail != ''"> and requesterEmail = #{requesterEmail}</if>
+            <if test="boxState != null  and boxState != ''"> and boxState = #{boxState}</if>
+            <if test="areaLocation != null  and areaLocation != ''"> and areaLocation = #{areaLocation}</if>
+            <if test="borrowState != null "> and borrowState = #{borrowState}</if>
+            <if test="borrowerStaffId != null  and borrowerStaffId != ''"> and borrowerStaffId = #{borrowerStaffId}</if>
+            <if test="borrowerName != null  and borrowerName != ''"> and borrowerName like concat('%', #{borrowerName}, '%')</if>
+            <if test="destructionTime != null  and destructionTime != ''"> and destructionTime = #{destructionTime}</if>
+            <if test="destructionPeople != null  and destructionPeople != ''"> and destructionPeople = #{destructionPeople}</if>
+            <if test="creationDate != null  and creationDate != ''"> and creationDate = #{creationDate}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="editor != null  and editor != ''"> and editor = #{editor}</if>
+            <if test="action != null  and action != ''"> and action = #{action}</if>
+            <if test="updateDate != null  and updateDate != ''"> and updateDate = #{updateDate}</if>
+            <if test="accountCode != null  and accountCode != ''"> and accountCode = #{accountCode}</if>
+            <if test="boxRemark != null  and boxRemark != ''"> and boxRemark = #{boxRemark}</if>
+        </where>
+    </select>
+
+    <select id="selectFilingBoxOperationRecordById" parameterType="Long" resultMap="FilingBoxOperationRecordResult">
+        <include refid="selectFilingBoxOperationRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFilingBoxOperationRecord" parameterType="com.ruoyi.filingsystem.domain.FilingBoxOperationRecord">
+        INSERT INTO filing_box_operation_record_${deptId}(
+        boxId,oldSystemboxMark, boxDepartment, boxNumber, vendorNumber, vendorBarcode, retentionDate, chargeCode,
+        approvedStaffIdLpn, approverEmail, supportingDocument, staffIdLpn, requesterEmail, boxState, areaLocation,
+        borrowState, borrowerStaffId, borrowerName, destructionTime, destructionPeople, createTime, updateTime, dept_id,
+        accountCode, boxRemark, createBy, updateBy, `action`, operator, operationTime, files_json
+        )
+        SELECT
+        T.id, T.oldSystemboxMark, T.boxDepartment, T.boxNumber, T.vendorNumber, T.vendorBarcode, T.retentionDate,
+        T.chargeCode, T.approvedStaffIdLpn, T.approverEmail, T.supportingDocument, T.staffIdLpn, T.requesterEmail,
+        T.boxState, T.areaLocation, T.borrowState, T.borrowerStaffId, T.borrowerName, T.destructionTime, T.destructionPeople,
+        T.createTime, T.updateTime, T.dept_id, T.accountCode, T.boxRemark, T.createBy, T.updateBy,
+        #{action},
+        #{operator},
+        NOW(),
+        JSON_ARRAYAGG(
+        JSON_OBJECT(
+        'file_name', fba.file_name,
+        'file_path', fba.file_path,
+        'usage', fba.`usage`
+        )
+        ) as files_json
+        FROM filing_box_profile_${deptId} AS T
+        LEFT JOIN filing_box_attachments_${deptId} fba
+        ON T.id = fba.box_profile_id AND T.dept_id = fba.dept_id AND fba.status = 'active'
+        WHERE T.id = #{id}
+    </insert>
+
+    <insert id="batchInsertHistoryRecord" parameterType="com.ruoyi.filingsystem.dto.BatchInsertBoxHistoryDTO">
+        INSERT INTO filing_box_operation_record_${deptId}(
+        boxId,oldSystemboxMark, boxDepartment, boxNumber, vendorNumber, vendorBarcode, retentionDate, chargeCode,
+        approvedStaffIdLpn, approverEmail, supportingDocument, staffIdLpn, requesterEmail, boxState, areaLocation,
+        borrowState, borrowerStaffId, borrowerName, destructionTime, destructionPeople, createTime, updateTime, dept_id,
+        accountCode, boxRemark, createBy, updateBy, `action`, operator, operationTime, files_json
+        )
+        SELECT
+        T.id,T.oldSystemboxMark, T.boxDepartment, T.boxNumber, T.vendorNumber, T.vendorBarcode, T.retentionDate,
+        T.chargeCode, T.approvedStaffIdLpn, T.approverEmail, T.supportingDocument, T.staffIdLpn, T.requesterEmail,
+        T.boxState, T.areaLocation, T.borrowState, T.borrowerStaffId, T.borrowerName, T.destructionTime,
+        T.destructionPeople, T.createTime, T.updateTime, T.dept_id, T.accountCode, T.boxRemark, T.createBy,
+        T.updateBy, #{action}, #{operator}, NOW(),
+        JSON_ARRAYAGG(
+        JSON_OBJECT(
+        'file_name', fba.file_name,
+        'file_path', fba.file_path,
+        'usage', fba.`usage`
+        )
+        ) as files_json
+        FROM filing_box_profile_${deptId} AS T
+        LEFT JOIN filing_box_attachments_${deptId} fba
+        ON T.id = fba.box_profile_id AND T.dept_id = fba.dept_id AND fba.status = 'active'
+        <where>
+            T.id IN
+            <foreach collection="lstId" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+        GROUP BY
+        T.id;
+    </insert>
+
+
+    <update id="updateFilingBoxOperationRecord" parameterType="com.ruoyi.filingsystem.domain.FilingBoxOperationRecord">
+        update filing_box_operation_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="oldSystemboxMark != null">oldSystemboxMark = #{oldSystemboxMark},</if>
+            <if test="boxDepartment != null">boxDepartment = #{boxDepartment},</if>
+            <if test="boxNumber != null">boxNumber = #{boxNumber},</if>
+            <if test="vendorNumber != null">vendorNumber = #{vendorNumber},</if>
+            <if test="vendorBarcode != null">vendorBarcode = #{vendorBarcode},</if>
+            <if test="retentionDate != null">retentionDate = #{retentionDate},</if>
+            <if test="chargeCode != null">chargeCode = #{chargeCode},</if>
+            <if test="approvedStaffIdLpn != null">approvedStaffIdLpn = #{approvedStaffIdLpn},</if>
+            <if test="insertPeopleEmail != null">insertPeopleEmail = #{insertPeopleEmail},</if>
+            <if test="approverEmail != null">approverEmail = #{approverEmail},</if>
+            <if test="supportingDocument != null">supportingDocument = #{supportingDocument},</if>
+            <if test="staffidLpn != null">StaffId_lpn = #{staffidLpn},</if>
+            <if test="requesterEmail != null">requesterEmail = #{requesterEmail},</if>
+            <if test="boxState != null">boxState = #{boxState},</if>
+            <if test="areaLocation != null">areaLocation = #{areaLocation},</if>
+            <if test="borrowState != null">borrowState = #{borrowState},</if>
+            <if test="borrowerStaffId != null">borrowerStaffId = #{borrowerStaffId},</if>
+            <if test="borrowerName != null">borrowerName = #{borrowerName},</if>
+            <if test="destructionTime != null">destructionTime = #{destructionTime},</if>
+            <if test="destructionPeople != null">destructionPeople = #{destructionPeople},</if>
+            <if test="creationDate != null">creationDate = #{creationDate},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="editor != null">editor = #{editor},</if>
+            <if test="action != null">action = #{action},</if>
+            <if test="updateDate != null">updateDate = #{updateDate},</if>
+            <if test="accountCode != null">accountCode = #{accountCode},</if>
+            <if test="boxRemark != null">boxRemark = #{boxRemark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFilingBoxOperationRecordById" parameterType="Long">
+        delete from filing_box_operation_record where id = #{id}
+    </delete>
+
+    <delete id="deleteFilingBoxOperationRecordByIds" parameterType="String">
+        delete from filing_box_operation_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectList" resultType="com.ruoyi.filingsystem.domain.FilingBoxOperationRecord">
+        <include refid="selectFilingBoxOperationRecordVo"/>
+        <where>
+            <if test="deptId != null and deptId != ''"> and dept_id = #{deptId}</if>
+            <if test="boxNumber != null  and boxNumber != ''"> and boxNumber = #{boxNumber}</if>
+            <if test="vendorBarcode != null  and vendorBarcode != ''"> and vendorBarcode = #{vendorBarcode}</if>
+            <if test="chargeCode != null  and chargeCode != ''"> and chargeCode = #{chargeCode}</if>
+        </where>
+
+
+    </select>
+
+    <select id="selectFilingFileOperationRecordList"
+            resultType="com.ruoyi.filingsystem.domain.FilingBoxOperationRecord">
+        <include refid="selectFilingBoxOperationRecordVo"/>
+        where id in
+        <foreach  item="item" index="index" collection="List" open="(" separator="," close=" )">
+            #{item}
+        </foreach>
+
+    </select>
+</mapper>

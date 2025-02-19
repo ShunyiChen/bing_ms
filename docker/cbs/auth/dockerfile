@@ -1,0 +1,14 @@
+# 基础镜像
+FROM cbs-acr-shanghai-registry.cn-shanghai.cr.aliyuncs.com/ns-shanghai/cbs-acr-shanghai:21-jdk
+# author
+MAINTAINER cbs
+# 挂载目录
+VOLUME /home/cbs
+# 创建目录
+RUN mkdir -p /home/cbs
+# 指定路径
+WORKDIR /home/cbs
+# 复制jar文件到路径
+COPY ./jar/cbs-auth.jar /home/cbs/cbs-auth.jar
+# 启动认证服务
+ENTRYPOINT ["java","-jar","cbs-auth.jar"]

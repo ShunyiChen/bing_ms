@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bing.system.mapper.SysReleaseNotesMapper">
+    
+    <resultMap type="ReleaseNote" id="SysReleaseNoteResult">
+    	<id     property="id"      column="id"      />
+        <result property="categoryName"    column="category_name"    />
+        <result property="systemName"     column="system_name"     />
+        <result property="version"   column="version"   />
+        <result property="releaseDate"    column="release_date"    />
+        <result property="notes"      column="notes"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+    
+    <sql id="selectReleaseNoteVo">
+        SELECT id, category_name, system_name, version, release_date, notes, create_time, update_time
+            FROM release_notes
+    </sql>
+
+    <select id="getReleaseNotesByDate" parameterType="ReleaseNote" resultMap="SysReleaseNoteResult">
+        <include refid="selectReleaseNoteVo"/>
+        <where>
+            release_date = #{releaseDate} and system_name = #{systemName}
+        </where>
+    </select>
+    
+    <select id="getReleaseDateList" parameterType="ReleaseNote" resultType="String">
+        select release_date from release_notes where system_name = #{systemName} group by release_date order by release_date desc
+    </select>
+</mapper>

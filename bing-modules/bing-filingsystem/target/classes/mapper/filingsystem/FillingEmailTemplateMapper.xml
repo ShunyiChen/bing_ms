@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingEmailTemplateMapper">
+    
+    <resultMap type="com.ruoyi.filingsystem.domain.FilingEmailTemplate" id="FilingEmailTemplateResult">
+        <result property="templateID"    column="templateID"    />
+        <result property="templateName"    column="templateName"    />
+        <result property="subject"    column="subject"    />
+        <result property="bodyStart"    column="bodyStart"    />
+        <result property="bodyEnd"    column="bodyEnd"    />
+        <result property="createdDate"    column="createdDate"    />
+        <result property="lastModifiedDate"    column="lastModifiedDate"    />
+    </resultMap>
+
+    <sql id="selectFilingEmailTemplateVo">
+        select templateID, templateName, subject, bodyStart,bodyEnd, createdDate, lastModifiedDate from filling_email_template
+    </sql>
+
+    <select id="selectFilingEmailTemplateList" parameterType="com.ruoyi.filingsystem.domain.FilingEmailTemplate" resultMap="FilingEmailTemplateResult">
+        <include refid="selectFilingEmailTemplateVo"/>
+        <where>  
+            <if test="templateName != null  and templateName != ''"> and templateName like concat('%', #{templateName}, '%')</if>
+            <if test="subject != null  and subject != ''"> and subject = #{subject}</if>
+            <if test="bodyStart != null  and bodyStart != ''"> and bodyStart = #{bodyStart}</if>
+            <if test="bodyEnd != null  and bodyEnd != ''"> and bodyEnd = #{bodyEnd}</if>
+            <if test="createdDate != null "> and createdDate = #{createdDate}</if>
+            <if test="lastModifiedDate != null "> and lastModifiedDate = #{lastModifiedDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectFilingEmailTemplateByTemplateID" parameterType="Long" resultMap="FilingEmailTemplateResult">
+        <include refid="selectFilingEmailTemplateVo"/>
+        where templateID = #{templateID}
+    </select>
+
+    <insert id="insertFilingEmailTemplate" parameterType="com.ruoyi.filingsystem.domain.FilingEmailTemplate" useGeneratedKeys="true" keyProperty="templateID">
+        insert into filling_email_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="templateName != null">templateName,</if>
+            <if test="subject != null">subject,</if>
+            <if test="bodyStart != null">bodyStart,</if>
+            <if test="bodyEnd != null">bodyEnd,</if>
+            <if test="createdDate != null">createdDate,</if>
+            <if test="lastModifiedDate != null">lastModifiedDate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="templateName != null">#{templateName},</if>
+            <if test="subject != null">#{subject},</if>
+            <if test="bodyStart != null">#{bodyStart},</if>
+            <if test="bodyEnd != null">#{bodyEnd},</if>
+            <if test="createdDate != null">#{createdDate},</if>
+            <if test="lastModifiedDate != null">#{lastModifiedDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFilingEmailTemplate" parameterType="com.ruoyi.filingsystem.domain.FilingEmailTemplate">
+        update filling_email_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templateName != null">templateName = #{templateName},</if>
+            <if test="subject != null">subject = #{subject},</if>
+            <if test="bodyStart != null">bodyStart = #{bodyStart},</if>
+            <if test="bodyEnd != null">bodyEnd = #{bodyEnd},</if>
+            <if test="createdDate != null">createdDate = #{createdDate},</if>
+            <if test="lastModifiedDate != null">lastModifiedDate = #{lastModifiedDate},</if>
+        </trim>
+        where templateID = #{templateID}
+    </update>
+
+    <delete id="deleteFilingEmailTemplateByTemplateID" parameterType="Long">
+        delete from filling_email_template where templateID = #{templateID}
+    </delete>
+
+    <delete id="deleteFilingEmailTemplateByTemplateIDs" parameterType="String">
+        delete from filling_email_template where templateID in 
+        <foreach item="templateID" collection="array" open="(" separator="," close=")">
+            #{templateID}
+        </foreach>
+    </delete>
+</mapper>

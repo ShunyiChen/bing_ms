@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingRelocationMapper">
+
+	<resultMap type="com.ruoyi.filingsystem.domain.FilingFileProfile" id="FileSearchResult">
+		<id property="oldSystemfileID"             column="oldSystemfileID"               />
+		<result property="boxNumber"           column="boxNumber"             />
+		<result property="oldSystemfileID"            column="oldSystemfileID"              />
+		<result property="clientGroupName"           column="clientGroupName"             />
+		<result property="clientCompanyName"          column="clientCompanyName"            />
+		<result property="fileType"  column="fileType"   />
+		<result property="retentionDate"             column="retentionDate"                />
+		<result property="auditReportDate"            column="auditReportDate"              />
+		<result property="borrowState"            column="borrowState"              />
+		<result property="avail"            column="avail"              />
+	</resultMap>
+	
+	<sql id="selectFileProfileVo">
+	    select
+		   r.boxNumber,
+		   r.oldSystemfileID,
+		   r.clientGroupName,
+		   r.clientCompanyName,
+		   r.fileType,
+		   r.yearEndDate,
+		   r.retentionDate,
+		   r.auditReportDate,
+		   r.fileState,
+		   r.boxNumber,
+		   r.fileDescription,
+		   r.borrowState,
+		   case
+			 when ISNULL(r.borrower) or r.borrower = '' then (case when r.borrowState = 1 then 'No' else 'Yes' END)
+			 else (case when r.borrowState = 1 then concat('No(Borrower: ', r.borrower,')') else 'Yes' END)
+		   end as avail
+        from filling_file_profile r
+    </sql>
+
+	<resultMap id="BoxSearchResult" type="com.ruoyi.filingsystem.vo.FilingBoxFilesVO">
+		<result property="boxNumber"  column="boxNumber" />
+		<result property="fileIDs"    column="fileIDs"  />
+		<result property="boxPrefix"    column="boxPrefix"  />
+		<result property="boxSuffix"    column="boxSuffix"  />
+		<result property="areaLocation"    column="locationName"  />
+		<result property="deptId"    column="deptId"  />
+	</resultMap>
+
+    <select id="fetchByFileID" parameterType="com.ruoyi.filingsystem.dto.FetchFileDTO" resultMap="FileSearchResult">
+		<include refid="selectFileProfileVo"/>
+		where
+			r.oldSystemfileID = #{fileID}
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+	</select>
+
+	<sql id="searchByBoxNumberQuery">
+		select
+			ffb.dept_id as deptId,
+			concat(ffb.boxPrefix,ffb.boxSuffix) as boxNumber,
+			ffb.boxPrefix,
+			ffb.boxSuffix,
+			fl.locationName
+		from
+			filing_file_box ffb
+		inner join filing_location fl on fl.dept_id = ffb.dept_id
+	</sql>
+
+	<select id="searchByBoxNumber" parameterType="com.ruoyi.filingsystem.dto.InsertFileToBoxDTO"
+			resultMap="BoxSearchResult">
+		<include refid="searchByBoxNumberQuery"/>
+		<where>
+			<if test="deptId != null and deptId != ''">
+				AND ffb.dept_id = #{deptId}
+			</if>
+			<if test="boxNumber != null and boxNumber != ''">
+				AND CONCAT(ffb.boxPrefix, ffb.boxSuffix) LIKE CONCAT('%', #{boxNumber,jdbcType=VARCHAR}, '%')
+			</if>
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+		</where>
+	</select>
+
+	<select id="searchFileIDsByBoxNumber" parameterType="com.ruoyi.filingsystem.dto.SearchFileIDsDTO"
+			resultMap="BoxSearchResult">
+		select
+			ffp.boxNumber,
+			ffp.dept_id as deptId,
+			group_concat(ffp.oldSystemfileID) as FileIDs
+		from
+			filling_file_profile ffp
+		where
+			ffp.fileState NOT IN ('LOSE','DESTROYED') AND
+		<foreach collection="list" item="item" index="index"
+				 separator=" or " open="(" close=")">
+				(ffp.boxNumber = #{item.boxNumber}
+				and ffp.dept_id = #{item.deptId})
+		</foreach>
+		group by
+			ffp.boxNumber,ffp.dept_id
+	</select>
+
+	<insert id="createBoxNumber" parameterType="com.ruoyi.filingsystem.dto.CreateBoxDTO">
+		insert into filing_file_box(
+			<if test="boxPrefix != null and boxPrefix != ''">boxPrefix,</if>
+		    <if test="boxSuffix != null and boxSuffix != ''">boxSuffix,</if>
+		    <if test="deptId != null and deptId != 0">dept_id</if>
+		)values(
+		    <if test="boxPrefix != null and boxPrefix != ''">#{boxPrefix},</if>
+			<if test="boxSuffix != null and boxSuffix != ''">#{boxSuffix},</if>
+			<if test="deptId != null and deptId != 0">#{deptId}</if>
+		)
+	</insert>
+
+	<update id="insertFileToBox" parameterType="com.ruoyi.filingsystem.dto.InsertFileToBoxDTO">
+		update filling_file_profile
+			set fileState='WAREHOUSE',boxNumber=UPPER(#{boxNumber}),updatedTime=NOW()
+			where oldSystemfileID in
+			<foreach collection="fileIDs" item="fileID" open="(" separator="," close=")">
+				#{fileID}
+			</foreach>
+	</update>
+
+	<update id="moveFileToBox" parameterType="java.util.List">
+		update filling_file_profile set fileState='WAREHOUSE',updatedTime=NOW(),boxNumber =
+		<foreach collection="list" item="item" index="index"
+				 separator=" " open="case oldSystemfileID" close="end">
+			when #{item.fileID} then UPPER(#{item.newBoxNumber})
+		</foreach>
+		where oldSystemfileID in
+		<foreach collection="list" item="item" index="index"
+				 separator="," open="(" close=")">
+			#{item.fileID}
+		</foreach>
+	</update>
+
+	<select id="existCheck" parameterType="com.ruoyi.filingsystem.dto.CreateBoxDTO" resultType="int">
+		select count(*) from filing_file_box ffb
+		<where>
+			ffb.boxPrefix = #{boxPrefix}
+			and ffb.boxSuffix = #{boxSuffix}
+			and ffb.dept_id = #{deptId}
+		</where>
+	</select>
+
+	<resultMap type="com.ruoyi.filingsystem.domain.FilingLocation" id="LocationSearchResult">
+		<result property="locationID"           column="locationID"             />
+		<result property="locationName"            column="locationName"              />
+		<result property="description"            column="description"              />
+		<result property="code"            column="code"              />
+		<result property="deptId"            column="dept_id"              />
+	</resultMap>
+
+	<select id="findLocationList" parameterType="com.ruoyi.filingsystem.dto.GetLocationsDTO" resultMap="LocationSearchResult">
+		select locationID,locationName,description,code, dept_id from filing_location
+		<where>
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+		</where>
+	</select>
+
+	<select id="findAllLocations" parameterType="com.ruoyi.filingsystem.dto.GetLocationsDTO" resultMap="LocationSearchResult">
+		select locationID,locationName,description,code, dept_id from filing_location order by locationName
+	</select>
+
+	<update id="moveToOffice" parameterType="java.util.List">
+		update filling_file_profile set fileState='OFFICE',updatedTime=NOW(),boxNumber = NULL
+		where oldSystemfileID in
+		<foreach collection="list" item="item" index="index"
+				 separator="," open="(" close=")">
+			#{item.fileID}
+		</foreach>
+	</update>
+
+	<resultMap id="FindBoxResult" type="com.ruoyi.filingsystem.vo.FilingFileBoxVO">
+		<result property="boxPrefix"    column="boxPrefix"  />
+		<result property="boxSuffix"    column="boxSuffix"  />
+		<result property="deptId"    column="dept_id"  />
+	</resultMap>
+
+	<select id="findAllBoxes" parameterType="com.ruoyi.filingsystem.dto.ChecksIfAllBoxesExistDTO" resultMap="FindBoxResult">
+		select ffb.* from filing_file_box ffb
+		<where>
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+		</where>
+	</select>
+</mapper>

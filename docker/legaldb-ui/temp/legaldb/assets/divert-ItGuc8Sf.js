@@ -1,0 +1,1 @@
+import{r as a,w as u,b as o,u as n,a as s}from"./index-CAgRbO-3.js";const i={__name:"divert",setup(c){n();const t=a(void 0),r=s();return u(r,e=>{t.value=e.query&&e.query.redirect},{immediate:!0}),o(()=>{window.open("http://localhost:8080/auth/aad/launch/legaldb?redirect="+encodeURIComponent(t.value),"_self")}),(e,d)=>null}};export{i as default};

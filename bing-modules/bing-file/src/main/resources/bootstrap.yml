@@ -1,0 +1,38 @@
+# Tomcat
+server:
+  port: 9300
+
+# Spring
+spring: 
+  application:
+    # 应用名称
+    name: cbs-modules-file
+  profiles:
+    # 环境配置
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: mse-e6ec4730-p.nacos-ans.mse.aliyuncs.com:8848
+        # 向nacos发送心跳间隔
+        heart-beat-interval: 3
+        # 命名空间
+        namespace: b429ca52-795f-45b0-807e-d5e7b3b5ae44
+        # 组
+        group: DEV_GROUP
+      config:
+        # 配置中心地址
+        server-addr: mse-e6ec4730-p.nacos-ans.mse.aliyuncs.com:8848
+        # 配置文件格式
+        file-extension: yml
+        # 命名空间
+        namespace: b429ca52-795f-45b0-807e-d5e7b3b5ae44
+        # 组
+        group: DEV_GROUP
+        # 共享配置
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+logging:
+  file:
+    name: logs/${spring.application.name}/info.log

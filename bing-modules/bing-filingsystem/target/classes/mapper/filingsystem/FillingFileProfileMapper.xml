@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingFileProfileMapper">
+
+    <resultMap id="FilingFileProfileResult" type="com.ruoyi.filingsystem.domain.FilingFileProfile">
+        <result property="fileID"    column="fileID"    />
+        <result property="oldSystemfileID"    column="oldSystemfileID"    />
+        <result property="oldSystemFileMark"    column="oldSystemFileMark"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="areaLocation"    column="areaLocation"    />
+        <result property="fileState"    column="fileState"    />
+        <result property="fileDescription"    column="fileDescription"    />
+        <result property="clientGroupName"    column="clientGroupName"    />
+        <result property="clientNumber"    column="clientNumber"    />
+        <result property="clientCompanyName"    column="clientCompanyName"    />
+        <result property="boxNumber"    column="boxNumber"    />
+        <result property="fileType"    column="fileType"    />
+        <result property="fileremarks"    column="fileremarks"    />
+        <result property="moveTo"    column="moveTo"    />
+        <result property="yearEndDate"    column="yearEndDate"    />
+        <result property="auditReportDate"    column="auditReportDate"    />
+        <result property="retentionDate"    column="retentionDate"    />
+        <result property="creationDate"    column="creationDate"    />
+        <result property="engagementNumber"    column="engagementNumber"    />
+        <result property="engagementEIC"    column="engagementEIC"    />
+        <result property="engagementPartner"    column="engagementPartner"    />
+        <result property="engagementEICEmail"    column="engagementEICEmail"    />
+        <result property="engagementPartnerEmail"    column="engagementPartnerEmail"    />
+        <result property="barCode"    column="barCode"    />
+        <result property="borrowState"    column="borrowState"    />
+        <result property="borrowerStaffId"    column="borrowerStaffId"    />
+        <result property="borrower"    column="borrower"    />
+        <result property="DestructionTime"    column="DestructionTime"    />
+        <result property="DestructionPeople"    column="DestructionPeople"    />
+        <result property="requesterName"    column="requesterName"    />
+        <result property="requestDate"    column="requestDate"    />
+        <result property="staffId" column="staffId"    />
+        <result property="retentionPeriod" column="retentionPeriod"    />
+        <result property="isDPN" column="isDPN"    />
+        <result property="isMoved" column="isMoved"    />
+        <result property="updatedTime" column="updatedTime"    />
+        <result property="serviceLine" column="serviceLine"    />
+    </resultMap>
+
+    <sql id="selectFilingFileProfileVo">
+        SELECT 
+			fileID,
+			oldSystemfileID,
+			oldSystemFileMark,
+			dept_id,
+			areaLocation,
+			fileState,
+			fileDescription,
+			clientGroupName,
+			clientNumber,
+			clientCompanyName,
+			boxNumber,
+			fileType,
+			fileremarks,
+			moveTo,
+			yearEndDate,
+			auditReportDate,
+			retentionDate,
+			creationDate,
+			engagementNumber,
+			engagementEIC,
+			engagementPartner,
+			engagementEICEmail,
+			engagementPartnerEmail,
+			barCode,
+			borrowState,
+			borrower,
+			DestructionTime,
+			DestructionPeople,
+			staffId,
+			requesterName
+		FROM
+			filling_file_profile
+    </sql>
+
+<!--    导出Barcode列表-->
+    <select id="exportBarcodeList" parameterType="com.ruoyi.filingsystem.dto.SearchFileDTO"
+            resultMap="FilingFileProfileResult">
+        <include refid="selectFilingFileProfileVo"/>
+        where oldSystemfileID IN
+        <foreach collection="fileIDs" item="fileId" open="(" close=")" separator=",">
+            #{fileId}
+        </foreach>
+    </select>
+
+    <select id="searchProfileListByDto" resultType="com.ruoyi.filingsystem.domain.FilingFileProfile"
+            resultMap="FilingFileProfileResult">
+        <include refid="selectProfileFields"/>
+       <where>
+           <if test="deptId != null and deptId != ''"> and dept_id = #{deptId}</if>
+           <if test="fileIDFrom != null and fileIDFrom != ''"> AND oldSystemfileID >= #{fileIDFrom}</if>
+           <if test="fileIDFromTo != null and fileIDFromTo != ''"> AND oldSystemfileID &lt;= #{fileIDFromTo}</if>
+           <if test="fileDescription != null and fileDescription != ''">
+               <!-- 使用 CONCAT 函数将 % 符号添加到查询参数的两端，实现模糊匹配 -->
+               and fileDescription LIKE CONCAT('%', #{fileDescription}, '%')
+           </if>
+           <if test="clientGroupName != null and clientGroupName != ''">
+               <!-- 使用 CONCAT 函数将 % 符号添加到查询参数的两端，实现模糊匹配 -->
+               and clientGroupName LIKE CONCAT('%', #{clientGroupName}, '%')
+           </if>
+           <if test="clientNumber != null and clientNumber != ''"> and clientNumber = #{clientNumber}</if>
+           <if test="boxNumber != null and boxNumber != ''"> and boxNumber = #{boxNumber}</if>
+           <if test="fileType != null and fileType != ''"> and fileType = #{fileType}</if>
+           <if test="fileState != null and fileState != ''"> and fileState = #{fileState}</if>
+           <if test="engagementNumber != null and engagementNumber != ''"> and engagementNumber = #{engagementNumber}</if>
+           <if test="engagementEICEmail != null and engagementEICEmail != ''"> and engagementEICEmail LIKE CONCAT('%', #{engagementEICEmail}, '%')</if>
+           <if test="engagementPartnerEmail != null and engagementPartnerEmail != ''"> and engagementPartnerEmail LIKE CONCAT('%', #{engagementPartnerEmail}, '%')</if>
+           <if test="ccId != null and ccId != ''"> and ccId = #{ccId}</if>
+           <if test="clientCompanyName != null and clientCompanyName != ''">
+               <!-- 使用 CONCAT 函数将 % 符号添加到查询参数的两端，实现模糊匹配 -->
+               and clientCompanyName LIKE CONCAT('%', #{clientCompanyName}, '%')
+           </if>
+           <if test="fileremarks != null and fileremarks != ''">
+               <!-- 使用 CONCAT 函数将 % 符号添加到查询参数的两端，实现模糊匹配 -->
+               and fileremarks LIKE CONCAT('%', #{fileremarks}, '%')
+           </if>
+           <if test="isDPN != null and isDPN != ''"> and isDPN = #{isDPN}</if>
+           <if test="borrowState != null and borrowState == '0'.toString()"> and borrowState = '0' AND fileState NOT IN ('LOSE','DESTROYED')</if>
+           <if test="borrowState != null and borrowState == '1'.toString()"> and (borrowState = '1' OR fileState IN ('LOSE','DESTROYED'))</if>
+           <if test="requesterName != null"> and requesterName LIKE CONCAT('%', #{requesterName}, '%')</if>
+           <if test="moveTo != null"> and moveTo LIKE CONCAT('%', #{moveTo}, '%')</if>
+           <if test="staffId != null"> and staffId = #{staffId}</if>
+           <choose>
+               <!-- 查询区间 -->
+               <when test="yearEndDateFrom != null and yearEndDateTo != null">
+                   AND CAST(yearEndDate AS DATE) BETWEEN #{yearEndDateFrom, javaType=java.util.Date} AND #{yearEndDateTo, javaType=java.util.Date}
+               </when>
+           </choose>
+           <choose>
+               <!-- 查询区间 -->
+               <when test="auditReportDateFrom != null and auditReportDateTo != null">
+                   AND CAST(auditReportDate AS DATE) BETWEEN #{auditReportDateFrom, javaType=java.util.Date} AND #{auditReportDateTo, javaType=java.util.Date}
+               </when>
+           </choose>
+           <choose>
+               <!-- 查询区间 -->
+               <when test="retentionDateFrom != null and retentionDateTo != null">
+                   AND CAST(retentionDate AS DATE) BETWEEN #{retentionDateFrom, javaType=java.util.Date} AND #{retentionDateTo, javaType=java.util.Date}
+               </when>
+           </choose>
+           <choose>
+               <!-- 查询区间 -->
+               <when test="creationDateFrom != null and creationDateTo != null">
+                   AND CAST(creationDate AS DATETIME) BETWEEN #{creationDateFrom, javaType=java.util.Date} AND #{creationDateTo, javaType=java.util.Date}
+               </when>
+           </choose>
+           <choose>
+               <when test="updatedTimeFrom != null and updatedTimeTo != null">
+                   AND updatedTime BETWEEN #{updatedTimeFrom, javaType=java.util.Date} AND #{updatedTimeTo, javaType=java.util.Date}
+               </when>
+           </choose>
+           <if test="multipleSelection != null">
+               AND oldSystemfileID in (SELECT oldSystemfileID FROM temp_filing_selected_id)
+           </if>
+           <!-- 数据范围过滤 -->
+           ${params.dataScope}
+       </where>
+        <if test="multipleSelection != null">
+            order by oldSystemfileID+0
+        </if>
+    </select>
+
+    <update id="createTempTable">
+        CREATE TEMPORARY TABLE #{tbName}(
+            id bigint,
+            dept_id bigint
+        );
+    </update>
+
+    <insert id="insertTempTable" parameterType="String">
+        INSERT INTO #{tbName}(id, dept_id)
+        VALUES
+        <foreach collection="array" item="fileID" separator=",">
+            (#{fileID})
+        </foreach>
+    </insert>
+
+    <update id="dropTempTable">
+        <!-- 删除临时表-->
+        DROP TEMPORARY TABLE IF EXISTS temp_filing_selected_id;
+    </update>
+
+    <select id="selectFilingFileProfileByFileID" parameterType="String" resultMap="FilingFileProfileResult">
+        <include refid="selectProfileFields"/>
+        where oldSystemfileID = #{fileID}
+    </select>
+
+    <select id="selectFilingFileProfileByFileIDs" parameterType="String" resultMap="FilingFileProfileResult">
+        <include refid="selectProfileFields"/>
+        where oldSystemfileID = #{fileID}
+    </select>
+
+    <insert id="insertFilingFileProfile" parameterType="com.ruoyi.filingsystem.domain.FilingFileProfile"
+            useGeneratedKeys="true" keyProperty="fileID">
+        insert into filling_file_profile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oldSystemfileID != null">oldSystemfileID,</if>
+            <if test="oldSystemFileMark != null">oldSystemFileMark,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="areaLocation != null">areaLocation,</if>
+            <if test="fileState != null">fileState,</if>
+            <if test="fileDescription != null">fileDescription,</if>
+            <if test="clientGroupName != null">clientGroupName,</if>
+            <if test="clientNumber != null">clientNumber,</if>
+            <if test="clientCompanyName != null">clientCompanyName,</if>
+            <if test="boxNumber != null">boxNumber,</if>
+            <if test="fileType != null">fileType,</if>
+            <if test="fileremarks != null">fileremarks,</if>
+            <if test="moveTo != null">moveTo,</if>
+            <if test="yearEndDate != null">yearEndDate,</if>
+            <if test="auditReportDate != null">auditReportDate,</if>
+            retentionDate,
+            <if test="engagementNumber != null">engagementNumber,</if>
+            <if test="engagementEIC != null">engagementEIC,</if>
+            <if test="engagementEICEmail != null">engagementEICEmail,</if>
+            <if test="engagementPartner != null">engagementPartner,</if>
+            <if test="engagementPartnerEmail != null">engagementPartnerEmail,</if>
+            <if test="barCode != null">barCode,</if>
+            <if test="borrowState != null">borrowState,</if>
+            <if test="borrower != null">borrower,</if>
+            <if test="DestructionTime != null">DestructionTime,</if>
+            <if test="DestructionPeople != null">DestructionPeople,</if>
+            creationDate,
+            <if test="ccId != null">ccId,</if>
+            <if test="isDPN != null">isDPN,</if>
+            isMoved,
+            <if test="DestructionTime != null">DestructionTime,</if>
+            <if test="staffId != null">staffId,</if>
+            <if test="requesterName != null">requesterName,</if>
+            <if test="retentionPeriod != null">retentionPeriod,</if>
+            <if test="serviceLine != null">serviceLine,</if>
+            updatedTime
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="oldSystemfileID != null">#{oldSystemfileID},</if>
+            <if test="oldSystemFileMark != null">#{oldSystemFileMark},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="areaLocation != null">#{areaLocation},</if>
+            <if test="fileState != null">#{fileState},</if>
+            <if test="fileDescription != null">#{fileDescription},</if>
+            <if test="clientGroupName != null">#{clientGroupName},</if>
+            <if test="clientNumber != null">#{clientNumber},</if>
+            <if test="clientCompanyName != null">#{clientCompanyName},</if>
+            <if test="boxNumber != null">#{boxNumber},</if>
+            <if test="fileType != null">#{fileType},</if>
+            <if test="fileremarks != null">#{fileremarks},</if>
+            <if test="moveTo != null">#{moveTo},</if>
+            <if test="yearEndDate != null">#{yearEndDate},</if>
+            <if test="auditReportDate != null">#{auditReportDate},</if>
+            <choose>
+                <when test="isDPN == 'Y'.toString() or retentionPeriod == 1000">
+                    '9999-12-31',
+                </when>
+                <when test="auditReportDate == null and isDPN == 'N'.toString()">
+                    DATE_ADD(DATE_ADD(#{yearEndDate}, INTERVAL #{retentionPeriod} YEAR), INTERVAL 1 DAY),
+                </when>
+                <when test="auditReportDate != null and isDPN == 'N'.toString()">
+                    DATE_ADD(DATE_ADD(#{auditReportDate}, INTERVAL #{retentionPeriod} YEAR), INTERVAL 1 DAY),
+                </when>
+            </choose>
+            <if test="engagementNumber != null">#{engagementNumber},</if>
+            <if test="engagementEIC != null">#{engagementEIC},</if>
+            <if test="engagementEICEmail != null">#{engagementEICEmail},</if>
+            <if test="engagementPartner != null">#{engagementPartner},</if>
+            <if test="engagementPartnerEmail != null">#{engagementPartnerEmail},</if>
+            <if test="barCode != null">#{barCode},</if>
+            <if test="borrowState != null">#{borrowState},</if>
+            <if test="borrower != null">#{borrower},</if>
+            <if test="DestructionTime != null">#{DestructionTime},</if>
+            <if test="DestructionPeople != null">#{DestructionPeople},</if>
+            NOW(),
+            <if test="ccId != null">#{ccId},</if>
+            <if test="isDPN != null">#{isDPN},</if>
+            'N',
+            <if test="staffId != null">#{staffId},</if>
+            <if test="requesterName != null">#{requesterName},</if>
+            <if test="retentionPeriod != null">#{retentionPeriod},</if>
+            <if test="serviceLine != null">#{serviceLine},</if>
+            NOW()
+         </trim>
+    </insert>
+
+    <update id="updateFilingFileProfile" parameterType="com.ruoyi.filingsystem.dto.UpdateFileDTO">
+        update filling_file_profile
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="areaLocation != null">areaLocation = #{areaLocation},</if>
+            <if test="fileState != null">fileState = #{fileState},</if>
+            <if test="fileDescription != null">fileDescription = #{fileDescription},</if>
+            <if test="clientGroupName != null">clientGroupName = #{clientGroupName},</if>
+            <if test="clientNumber != null">clientNumber = #{clientNumber},</if>
+            <if test="clientCompanyName != null">clientCompanyName = #{clientCompanyName},</if>
+            boxNumber = #{boxNumber},
+            <if test="fileType != null">fileType = #{fileType},</if>
+            <if test="fileremarks != null">fileremarks = #{fileremarks},</if>
+            <if test="moveTo != null">moveTo = #{moveTo},</if>
+            <if test="yearEndDate != null">yearEndDate = #{yearEndDate},</if>
+            auditReportDate = #{auditReportDate},
+            <choose>
+                <when test="isDPN == 'Y'.toString() or retentionPeriod == 1000">
+                    retentionDate = '9999-12-31',
+                </when>
+                <when test="auditReportDate == null and yearEndDate != null and isDPN == 'N'.toString()">
+                    retentionDate = DATE_ADD(DATE_ADD(#{yearEndDate}, INTERVAL #{retentionPeriod} YEAR), INTERVAL 1 DAY),
+                </when>
+                <when test="auditReportDate != null and isDPN == 'N'.toString()">
+                    retentionDate = DATE_ADD(DATE_ADD(#{auditReportDate}, INTERVAL #{retentionPeriod} YEAR), INTERVAL 1 DAY),
+                </when>
+            </choose>
+            <if test="engagementNumber != null">engagementNumber = #{engagementNumber},</if>
+            <if test="engagementEIC != null">engagementEIC = #{engagementEIC},</if>
+            <if test="engagementPartner != null">engagementPartner = #{engagementPartner},</if>
+            <if test="engagementEICEmail != null">engagementEICEmail =#{engagementEICEmail},</if>
+            <if test="engagementPartnerEmail != null">engagementPartnerEmail =#{engagementPartnerEmail},</if>
+            <if test="barCode != null">barCode = #{barCode},</if>
+            <if test="ccId != null">ccId = #{ccId},</if>
+            <if test="isDPN != null">isDPN = #{isDPN},</if>
+            <if test="staffId != null">staffId = #{staffId},</if>
+            <if test="requesterName != null">requesterName = #{requesterName},</if>
+            <if test="retentionPeriod != null">retentionPeriod = #{retentionPeriod},</if>
+            <if test="serviceLine != null">serviceLine = #{serviceLine},</if>
+            updatedTime = NOW()
+        </trim>
+        where oldSystemfileID = #{oldSystemfileID}
+    </update>
+
+    <select id="selectFilingFileProfileListWithBoxNum" resultMap="FilingFileProfileResult">
+        <include refid="selectProfileFields"/>
+        <where>
+            <!-- 使用动态SQL构建WHERE条件 -->
+            <if test="boxNum != null and boxNum != '' and areaLocation != null and areaLocation != '' ">
+                boxNumber = #{boxNum} AND areaLocation= #{areaLocation}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectFileByFileIDs" resultType="com.ruoyi.filingsystem.domain.FilingFileProfile">
+        <include refid="selectProfileFields"/>
+        <where>
+            oldSystemfileID IN
+            <foreach collection="array" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
+    <sql id="selectProfileFields">
+        SELECT 
+			CAST(CONV(oldSystemfileID, 10, 10) AS UNSIGNED INTEGER) AS fileID,
+			oldSystemfileID,
+			oldSystemFileMark,
+			dept_id,
+			areaLocation,
+			fileState,
+			fileDescription,
+			clientGroupName,
+			clientNumber,
+			clientCompanyName,
+			boxNumber,
+			fileType,
+			fileremarks,
+			moveTo,
+			yearEndDate,
+			auditReportDate,
+			retentionDate,
+			creationDate,
+			engagementNumber,
+			engagementEIC,
+			engagementPartner,
+			barCode,
+			borrowState,
+			borrowerStaffId,
+			borrower,
+			DestructionTime,
+			DestructionPeople,
+			engagementEICEmail,
+			engagementPartnerEmail,
+			ccId,
+			isDPN,
+			requesterName,
+			requestDate,
+			staffId,
+			retentionPeriod,
+			isMoved,
+            updatedTime,
+            serviceLine,
+			CASE
+				WHEN
+					ISNULL(borrower) OR borrower = ''
+				THEN
+					(CASE
+						WHEN borrowState = 1 THEN 'No'
+						ELSE 'Yes'
+					END)
+				ELSE (CASE
+					WHEN borrowState = 1 THEN CONCAT('No(Borrower: ', borrower, ')')
+					ELSE 'Yes'
+				END)
+			END AS avail
+		FROM
+			filling_file_profile
+    </sql>
+
+    <select id="selectMaxFileIdByArealocation" resultType="com.ruoyi.filingsystem.domain.FilingFileProfile">
+        <include refid="selectProfileFields"/>
+           where  areaLocation =#{area} order by fileID desc limit 1;
+    </select>
+
+    <select id="findByFileIds" resultType="com.ruoyi.filingsystem.domain.FilingFileProfile">
+        <include refid="selectProfileFields"/>
+        where oldSystemfileID IN
+        <foreach collection="array" item="fileId" open="(" close=")" separator=",">
+            #{fileId}
+        </foreach>
+    </select>
+
+    <update id="batchUpdateFileTypes" parameterType="java.util.List">
+        update filling_file_profile
+        <set>
+            updatedTime=NOW(),
+            fileType =
+            <foreach collection="list" item="item" index="index"
+                     separator=" " open="case oldSystemfileID" close="end">
+                when #{item.oldSystemfileID} then #{item.fileType}
+            </foreach>
+            ,isDPN =
+            <foreach collection="list" item="item" index="index"
+                     separator=" " open="case oldSystemfileID" close="end">
+                when #{item.oldSystemfileID} then
+                <choose>
+                    <when test="item.fileType == 'I'.toString()">
+                        'Y'
+                    </when>
+                    <otherwise>
+                        'N'
+                    </otherwise>
+                </choose>
+            </foreach>
+            ,retentionDate =
+            <foreach collection="list" item="item" index="index" separator=" " open="case oldSystemfileID" close="end">
+                when #{item.oldSystemfileID} then
+                <choose>
+                    <when test="item.fileType == 'I'.toString() or item.retentionPeriod == 1000">
+                        '9999-12-31'
+                    </when>
+                    <otherwise>
+                        <choose>
+                            <when test="item.auditReportDate != null">
+                                DATE_ADD(DATE_ADD(#{item.auditReportDate}, INTERVAL #{item.retentionPeriod} YEAR), INTERVAL 1 DAY)
+                            </when>
+                            <otherwise>
+                                DATE_ADD(DATE_ADD(#{item.yearEndDate}, INTERVAL #{item.retentionPeriod} YEAR), INTERVAL 1 DAY)
+                            </otherwise>
+                        </choose>
+                    </otherwise>
+                </choose>
+            </foreach>
+        </set>
+        where oldSystemfileID IN
+        <foreach collection="list" item="f" open="(" close=")" separator=",">
+            #{f.oldSystemfileID}
+        </foreach>
+    </update>
+
+    <update id="batchUpdateDPN" parameterType="java.util.List">
+        update filling_file_profile
+        <set>
+            updatedTime=NOW(),
+            isDPN =
+            <foreach collection="list" item="item" index="index"
+                     separator=" " open="case oldSystemfileID" close="end">
+                when #{item.oldSystemfileID} then #{item.isDPN}
+            </foreach>
+            ,retentionDate =
+            <foreach collection="list" item="f" index="index" separator=" " open="case oldSystemfileID" close="end">
+                when #{f.oldSystemfileID} then
+                <choose>
+                    <when test="f.isDPN == 'Y'.toString() or f.retentionPeriod == 1000">
+                        '9999-12-31'
+                    </when>
+                    <when test="f.auditReportDate == null and f.isDPN == 'N'.toString()">
+                        DATE_ADD(DATE_ADD(#{f.yearEndDate}, INTERVAL #{f.retentionPeriod} YEAR), INTERVAL 1 DAY)
+                    </when>
+                    <when test="f.auditReportDate != null and f.isDPN == 'N'.toString()">
+                        DATE_ADD(DATE_ADD(#{f.auditReportDate}, INTERVAL #{f.retentionPeriod} YEAR), INTERVAL 1 DAY)
+                    </when>
+                </choose>
+            </foreach>
+        </set>
+        where oldSystemfileID IN
+        <foreach collection="list" item="f" open="(" close=")" separator=",">
+            #{f.oldSystemfileID}
+        </foreach>
+    </update>
+
+    <update id="updateMoveTo" parameterType="com.ruoyi.filingsystem.dto.UpdateMoveToDTO">
+        UPDATE filling_file_profile
+           SET moveTo=#{moveTo},isMoved=#{isMoved},boxNumber='',fileState='OFFICE',updatedTime=NOW()
+        WHERE oldSystemfileID IN
+        <foreach collection="fileIDs" item="fileID" open="(" close=")" separator=",">
+            #{fileID}
+        </foreach>
+    </update>
+
+    <select id="checkBoxNumberExists" parameterType="com.ruoyi.filingsystem.dto.BoxNumberExistDTO">
+        SELECT COUNT(*)
+        FROM
+            filing_file_box
+        WHERE
+            concat(boxPrefix, boxSuffix) = #{boxNumber}
+            AND dept_id = #{deptId}
+        LIMIT 1;
+    </select>
+
+    <resultMap type="com.ruoyi.filingsystem.vo.FilingBorrowUnnoticedVO" id="Over6MonthsOutstandingUnnoticedRS">
+        <result property="borrowID"    column="BorrowID"    />
+        <result property="oldSystemfileID"    column="oldSystemfileID"    />
+        <result property="fileDescription"    column="fileDescription"    />
+        <result property="clientGroupName"    column="clientGroupName"    />
+        <result property="clientCompanyName"    column="clientCompanyName"    />
+        <result property="clientNumber"    column="clientNumber"    />
+        <result property="fileType"    column="fileType"    />
+        <result property="yearEndDate"    column="yearEndDate"    />
+        <result property="areaLocation"    column="areaLocation"    />
+        <result property="staffId"    column="StaffId"    />
+        <result property="staffName"    column="StaffName"    />
+        <result property="staffEmail"    column="StaffEmail"    />
+        <result property="LoanDate"    column="LoanDate"    />
+
+    </resultMap>
+
+    <select id="findOver6MonthsOutstandingUnnoticed" resultMap="Over6MonthsOutstandingUnnoticedRS">
+        SELECT
+            fb.BorrowID,
+            ffp.oldSystemfileID,
+            ffp.fileDescription,
+            ffp.clientGroupName,
+            ffp.clientCompanyName,
+            ffp.clientNumber ,
+            ffp.fileType,
+            ffp.yearEndDate,
+            ffp.areaLocation,
+            fb.StaffId,
+            fb.StaffName,
+            fb.StaffEmail,
+            fb.LoanDate
+        FROM
+            filling_borrowrecord fb
+        LEFT JOIN
+            filling_file_profile ffp ON ffp.oldSystemfileID = fb.FileID
+        WHERE
+            CAST(fb.LoanDate AS DATETIME) &lt; DATE_SUB(NOW(), INTERVAL 6 MONTH) AND fb.Status = 1 AND fb.notify = 0
+    </select>
+
+    <update id="updateUnnoticedStatus" parameterType="java.lang.Long">
+        UPDATE filling_borrowrecord
+        SET notify = 1
+        WHERE BorrowID IN
+        <foreach collection="list" item="borrowID" open="(" close=")" separator=",">
+            #{borrowID}
+        </foreach>
+    </update>
+</mapper>

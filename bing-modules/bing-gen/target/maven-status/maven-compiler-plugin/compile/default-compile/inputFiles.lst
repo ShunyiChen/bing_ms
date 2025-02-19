@@ -1,0 +1,14 @@
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\BingGenApplication.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\config\GenConfig.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\controller\GenController.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\domain\GenTable.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\domain\GenTableColumn.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\mapper\GenTableColumnMapper.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\mapper\GenTableMapper.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\service\GenTableColumnServiceImpl.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\service\GenTableServiceImpl.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\service\IGenTableColumnService.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\service\IGenTableService.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\util\GenUtils.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\util\VelocityInitializer.java
+J:\zhangtao\bing\bing_ms\bing-modules\bing-gen\src\main\java\com\bing\gen\util\VelocityUtils.java

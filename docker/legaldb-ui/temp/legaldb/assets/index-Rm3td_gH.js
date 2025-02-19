@@ -1,0 +1,1 @@
+import{_ as n}from"./index-CN_1ak7f.js";import{r as o,o as t,j as l,f as e,D as p}from"./index-CAgRbO-3.js";const _={__name:"index",setup(u){const r=o("/legaldb/prod-api/swagger-ui/index.html");return(c,s)=>(t(),l(e(n),{src:e(r),"onUpdate:src":s[0]||(s[0]=a=>p(r)?r.value=a:null)},null,8,["src"]))}};export{_ as default};

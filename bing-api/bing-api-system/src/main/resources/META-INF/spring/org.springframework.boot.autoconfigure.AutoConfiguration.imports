@@ -1,0 +1,4 @@
+com.bing.system.api.factory.RemoteUserFallbackFactory
+com.bing.system.api.factory.RemoteLogFallbackFactory
+com.bing.system.api.factory.RemoteFileFallbackFactory
+com.bing.system.api.factory.RemoteFilingFallbackFactory

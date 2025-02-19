@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/bing-api/bing-api-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-api/bing-api-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-auth/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-datascope/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-datascope/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-datasource/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-datasource/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-log/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-log/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-redis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-redis/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-seata/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-seata/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/bing-common-security/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/bing-bing/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/bing-bing/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/bing-file/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/bing-file/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/bing-job/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/bing-job/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/bing-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/bing-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-modules/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-visual/bing-monitor/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-visual/bing-monitor/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-visual/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bing-visual/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

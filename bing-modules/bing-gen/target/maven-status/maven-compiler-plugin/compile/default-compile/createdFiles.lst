@@ -1,0 +1,14 @@
+com\bing\gen\service\IGenTableService.class
+com\bing\gen\service\IGenTableColumnService.class
+com\bing\gen\service\GenTableServiceImpl.class
+com\bing\gen\service\GenTableColumnServiceImpl.class
+com\bing\gen\config\GenConfig.class
+com\bing\gen\controller\GenController.class
+com\bing\gen\mapper\GenTableMapper.class
+com\bing\gen\mapper\GenTableColumnMapper.class
+com\bing\gen\util\GenUtils.class
+com\bing\gen\BingGenApplication.class
+com\bing\gen\util\VelocityUtils.class
+com\bing\gen\domain\GenTable.class
+com\bing\gen\domain\GenTableColumn.class
+com\bing\gen\util\VelocityInitializer.class

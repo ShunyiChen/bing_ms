@@ -1,0 +1,38 @@
+# Tomcat
+server:
+  port: 9204
+
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: cbs-modules-filingsystem
+  profiles:
+    # 环境配置
+    active: uat
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: mse-0f0494f0-nacos-ans.mse.aliyuncs.com:8848
+        # 向nacos发送心跳间隔
+        heart-beat-interval: 3
+        # 命名空间
+        namespace: d01f0da3-a8f8-4ad4-9945-4a15415ef5c4
+        # 组
+        group: UAT_GROUP
+      config:
+        # 配置中心地址
+        server-addr: mse-0f0494f0-nacos-ans.mse.aliyuncs.com:8848
+        # 配置文件格式
+        file-extension: yml
+        # 命名空间
+        namespace: d01f0da3-a8f8-4ad4-9945-4a15415ef5c4
+        # 组
+        group: UAT_GROUP
+        # 共享配置
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+logging:
+  file:
+    name: logs/${spring.application.name}/info.log

@@ -1,0 +1,2 @@
+com.bing.common.log.service.AsyncLogService
+com.bing.common.log.aspect.LogAspect

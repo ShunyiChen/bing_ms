@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingFileOperationRecordMapper">
+    
+    <resultMap type="com.ruoyi.filingsystem.domain.FilingFileOperationRecord" id="FilingFileOperationRecordResult">
+        <result property="recordID"    column="recordID"    />
+        <result property="fileID"    column="fileID"    />
+        <result property="operationType"    column="operationType"    />
+        <result property="operationTime"    column="operationTime"    />
+        <result property="operationUser"    column="operationUser"    />
+        <result property="previousDocumentState"    column="previousDocumentState"    />
+        <result property="currentDocumentState"    column="currentDocumentState"    />
+    </resultMap>
+
+    <sql id="selectFilingFileOperationRecordVo">
+        select recordID, fileID, operationType, operationTime, operationUser, previousDocumentState, currentDocumentState from filling_file_operation_record
+    </sql>
+
+    <select id="selectFilingFileOperationRecordList" parameterType="com.ruoyi.filingsystem.domain.FilingFileOperationRecord" resultMap="FilingFileOperationRecordResult">
+        <include refid="selectFilingFileOperationRecordVo"/>
+        <where>  
+            <if test="fileID != null "> and fileID = #{fileID}</if>
+            <if test="operationType != null  and operationType != ''"> and operationType = #{operationType}</if>
+            <if test="operationTime != null "> and operationTime = #{operationTime}</if>
+            <if test="operationUser != null  and operationUser != ''"> and operationUser = #{operationUser}</if>
+            <if test="previousDocumentState != null  and previousDocumentState != ''"> and previousDocumentState = #{previousDocumentState}</if>
+            <if test="currentDocumentState != null  and currentDocumentState != ''"> and currentDocumentState = #{currentDocumentState}</if>
+        </where>
+    </select>
+    
+    <select id="selectFilingFileOperationRecordByRecordID" parameterType="Long" resultMap="FilingFileOperationRecordResult">
+        <include refid="selectFilingFileOperationRecordVo"/>
+        where recordID = #{recordID}
+    </select>
+        
+    <insert id="insertFilingFileOperationRecord" parameterType="com.ruoyi.filingsystem.domain.FilingFileOperationRecord">
+        INSERT INTO filling_file_operation_record(
+            oldSystemfileID,
+            oldSystemFileMark,
+            dept_id,
+            areaLocation,
+            fileState,
+            fileDescription,
+            clientGroupName,
+            clientNumber,
+            clientCompanyName,
+            boxNumber,
+            fileType,
+            fileremarks,
+            moveTo,
+            isMoved,
+            yearEndDate,
+            auditReportDate,
+            retentionDate,
+            creationDate,
+            engagementNumber,
+            engagementEIC,
+            engagementPartner,
+            barCode,
+            borrowState,
+            borrowerStaffId,
+            borrower,
+            DestructionTime,
+            DestructionPeople,
+            engagementEICEmail,
+            engagementPartnerEmail,
+            ccId,
+            isDPN,
+            staffId,
+            requesterName,
+            requestDate,
+            retentionPeriod,
+            Editor,
+            Action,
+            UpdateTime
+        )
+        SELECT
+            oldSystemfileID,
+            oldSystemFileMark,
+            dept_id,
+            areaLocation,
+            fileState,
+            fileDescription,
+            clientGroupName,
+            clientNumber,
+            clientCompanyName,
+            boxNumber,
+            fileType,
+            fileremarks,
+            moveTo,
+            isMoved,
+            yearEndDate,
+            auditReportDate,
+            retentionDate,
+            creationDate,
+            engagementNumber,
+            engagementEIC,
+            engagementPartner,
+            barCode,
+            borrowState,
+            borrowerStaffId,
+            borrower,
+            DestructionTime,
+            DestructionPeople,
+            engagementEICEmail,
+            engagementPartnerEmail,
+            ccId,
+            isDPN,
+            staffId,
+            requesterName,
+            requestDate,
+            retentionPeriod,
+            #{editor},
+            #{action},
+            NOW()
+        FROM filling_file_profile
+        WHERE oldSystemfileID in
+            <foreach collection="fileIDs" item="fileID" open="(" separator="," close=")">
+                #{fileID}
+            </foreach>
+    </insert>
+
+    <update id="updateFilingFileOperationRecord" parameterType="com.ruoyi.filingsystem.domain.FilingFileOperationRecord">
+        update filling_file_operation_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileID != null">fileID = #{fileID},</if>
+            <if test="operationType != null">operationType = #{operationType},</if>
+            <if test="operationTime != null">operationTime = #{operationTime},</if>
+            <if test="operationUser != null">operationUser = #{operationUser},</if>
+            <if test="previousDocumentState != null">previousDocumentState = #{previousDocumentState},</if>
+            <if test="currentDocumentState != null">currentDocumentState = #{currentDocumentState},</if>
+        </trim>
+        where recordID = #{recordID}
+    </update>
+
+    <delete id="deleteFilingFileOperationRecordByRecordID" parameterType="Long">
+        delete from filling_file_operation_record where recordID = #{recordID}
+    </delete>
+
+    <delete id="deleteFilingFileOperationRecordByRecordIDs" parameterType="String">
+        delete from filling_file_operation_record where recordID in 
+        <foreach item="recordID" collection="array" open="(" separator="," close=")">
+            #{recordID}
+        </foreach>
+    </delete>
+</mapper>

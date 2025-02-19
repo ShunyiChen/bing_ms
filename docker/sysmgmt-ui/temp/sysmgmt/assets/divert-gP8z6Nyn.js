@@ -1,0 +1,1 @@
+import{u as r,r as u,a as s,w as o,D as n}from"./index-B_VQirsb.js";const i={__name:"divert",setup(c){r();const t=u(void 0),a=s();return o(a,e=>{t.value=e.query&&e.query.redirect},{immediate:!0}),n(()=>{window.open("http://localhost:8080/auth/aad/launch?appName=legaldb&redirect="+t.value,"_self")}),(e,d)=>null}};export{i as default};

@@ -1,0 +1,5 @@
+com.bing.common.security.config.WebMvcConfig
+com.bing.common.security.service.TokenService
+com.bing.common.security.aspect.PreAuthorizeAspect
+com.bing.common.security.aspect.InnerAuthAspect
+com.bing.common.security.handler.GlobalExceptionHandler

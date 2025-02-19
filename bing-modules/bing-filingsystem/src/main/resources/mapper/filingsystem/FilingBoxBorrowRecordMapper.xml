@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingBoxBorrowRecordMapper">
+
+    <resultMap type="com.ruoyi.filingsystem.domain.FilingBoxBorrowRecord" id="FilingBoxBorrowRecordResult">
+        <result property="id"    column="id"    />
+        <result property="boxId"    column="boxId"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="boxNumber"    column="boxNumber"    />
+        <result property="vendorBarcode"    column="vendorBarcode"    />
+        <result property="chargeCode"    column="chargeCode"    />
+        <result property="returnChargeCode"    column="returnChargeCode"    />
+        <result property="staffId"    column="staffId"    />
+        <result property="staffName"    column="staffName"    />
+        <result property="staffEmail"    column="staffEmail"    />
+        <result property="status"    column="status"    />
+        <result property="loanDate"    column="loanDate"    />
+        <result property="returnDate"    column="returnDate"    />
+        <result property="notify"    column="notify"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="updateBy"    column="updateBy"    />
+    </resultMap>
+
+    <sql id="queryColumns">
+        T.id,
+        T.boxId,
+        T.dept_id,
+        T.boxNumber,
+        T.vendorBarcode,
+        T.chargeCode,
+        T.returnChargeCode,
+        T.staffId,
+        T.staffName,
+        T.staffEmail,
+        T.status,
+        T.loanDate,
+        T.returnDate,
+        T.notify,
+        T.updateTime,
+        T.updateBy
+    </sql>
+
+    <sql id="whereEqualsTo">
+        <where>
+            T.staffId = #{staffId}
+            AND T.loanDate &lt; DATE_SUB(NOW(), INTERVAL 1 MONTH) AND T.status = 1
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </sql>
+
+    <select id="retrieveBoxesOverdueByOneMonth" resultMap="FilingBoxBorrowRecordResult">
+        SELECT
+            <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_1 AS T
+            <include refid="whereEqualsTo"/>
+        UNION ALL
+        SELECT
+            <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_2 AS T
+            <include refid="whereEqualsTo"/>
+        UNION ALL
+        SELECT
+            <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_3 AS T
+            <include refid="whereEqualsTo"/>
+        UNION ALL
+        SELECT
+            <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_4 AS T
+        <include refid="whereEqualsTo"/>
+        UNION ALL
+        SELECT
+            <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_5 AS T
+            <include refid="whereEqualsTo"/>
+    </select>
+
+    <insert id="insertBoxBorrowRecords">
+        INSERT INTO filing_box_borrowrecord_${deptId}
+            (boxId,
+            dept_id,
+            boxNumber,
+            vendorBarcode,
+            chargeCode,
+            staffId,
+            staffName,
+            staffEmail,
+            status,
+            loanDate,
+            returnDate,
+            notify)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.boxId},
+            #{item.deptId},
+            #{item.boxNumber},
+            #{item.vendorBarcode},
+            #{item.chargeCode},
+            #{item.staffId},
+            #{item.staffName},
+            #{item.staffEmail},
+            #{item.status},
+            #{item.loanDate},
+            #{item.returnDate},
+            #{item.notify})
+        </foreach>
+    </insert>
+
+    <sql id="selectBoxBorrowRecords1">
+        select
+            <include refid="queryColumns"/>
+        from
+            filing_box_borrowrecord_1 AS T
+        <include refid="searchWhere"/>
+    </sql>
+    <sql id="selectBoxBorrowRecords2">
+        select
+            <include refid="queryColumns"/>
+        from
+            filing_box_borrowrecord_2 AS T
+        <include refid="searchWhere"/>
+    </sql>
+    <sql id="selectBoxBorrowRecords3">
+        select
+            <include refid="queryColumns"/>
+        from
+            filing_box_borrowrecord_3 AS T
+        <include refid="searchWhere"/>
+    </sql>
+    <sql id="selectBoxBorrowRecords4">
+        select
+            <include refid="queryColumns"/>
+        from
+            filing_box_borrowrecord_4 AS T
+        <include refid="searchWhere"/>
+    </sql>
+    <sql id="selectBoxBorrowRecords5">
+        select
+            <include refid="queryColumns"/>
+        from
+            filing_box_borrowrecord_5 AS T
+        <include refid="searchWhere"/>
+    </sql>
+    <sql id="searchWhere">
+        <where>
+            <if test="boxId != null">T.boxId = #{boxId}</if>
+            <if test="deptId != null">AND T.dept_id = #{deptId}</if>
+            <if test="boxNumber != null and boxNumber != ''">AND T.boxNumber = #{boxNumber}</if>
+            <if test="vendorBarcode != null and vendorBarcode != ''">AND T.vendorBarcode = #{vendorBarcode}</if>
+            <if test="chargeCode != null and chargeCode != ''">AND T.chargeCode = #{chargeCode}</if>
+            <if test="returnChargeCode != null and returnChargeCode != ''">AND T.returnChargeCode = #{returnChargeCode}</if>
+            <if test="staffId != null and staffId != ''">AND T.staffId = #{staffId}</if>
+            <if test="staffName != null and staffName != ''">AND T.staffName = #{staffName}</if>
+            <if test="staffEmail != null and staffEmail != ''">AND T.staffEmail = #{staffEmail}</if>
+            <if test="status != null">AND T.status = #{status}</if>
+            <if test="loanDateFrom != null and loanDateTo != null">
+                AND T.loanDate BETWEEN #{loanDateFrom, javaType=java.util.Date} AND #{loanDateTo, javaType=java.util.Date}
+            </if>
+            <if test="returnDateFrom != null and returnDateTo != null">
+                AND T.returnDate BETWEEN #{returnDateFrom, javaType=java.util.Date} AND #{returnDateTo, javaType=java.util.Date}
+            </if>
+            <if test="updatedTimeFrom != null and updatedTimeTo != null">
+                AND T.updateTime BETWEEN #{updatedTimeFrom, javaType=java.util.Date} AND #{updatedTimeTo, javaType=java.util.Date}
+            </if>
+            <if test="notify != null">AND T.notify = #{notify}</if>
+            <if test="multipleSelection != null">
+                AND EXISTS (
+                    SELECT 1
+                    FROM temp_export_box_borrow_history tmp
+                    WHERE T.id = tmp.id AND T.dept_id = tmp.dept_id
+                )
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </sql>
+
+    <select id="searchBoxBorrowRecords"
+            parameterType="com.ruoyi.filingsystem.dto.SearchBoxBorrowRecordsDTO"
+            resultType="com.ruoyi.filingsystem.domain.FilingBoxBorrowRecord"
+            resultMap="FilingBoxBorrowRecordResult">
+        <if test="deptId != null">
+            <choose>
+                <when test="deptId == 1">
+                    <include refid="selectBoxBorrowRecords1"/>
+                </when>
+                <when test="deptId == 2">
+                    <include refid="selectBoxBorrowRecords2"/>
+                </when>
+                <when test="deptId == 3">
+                    <include refid="selectBoxBorrowRecords3"/>
+                </when>
+                <when test="deptId == 4">
+                    <include refid="selectBoxBorrowRecords4"/>
+                </when>
+                <when test="deptId == 5">
+                    <include refid="selectBoxBorrowRecords5"/>
+                </when>
+                <otherwise>
+                    <include refid="selectBoxBorrowRecords1"/>
+                    UNION ALL
+                    <include refid="selectBoxBorrowRecords2"/>
+                    UNION ALL
+                    <include refid="selectBoxBorrowRecords3"/>
+                    UNION ALL
+                    <include refid="selectBoxBorrowRecords4"/>
+                    UNION ALL
+                    <include refid="selectBoxBorrowRecords5"/>
+                </otherwise>
+            </choose>
+        </if>
+        <if test="deptId == null">
+            <include refid="selectBoxBorrowRecords1"/>
+            UNION ALL
+            <include refid="selectBoxBorrowRecords2"/>
+            UNION ALL
+            <include refid="selectBoxBorrowRecords3"/>
+            UNION ALL
+            <include refid="selectBoxBorrowRecords4"/>
+            UNION ALL
+            <include refid="selectBoxBorrowRecords5"/>
+        </if>
+    </select>
+
+    <update id="changeChargeCode">
+        UPDATE
+            filing_box_borrowrecord_${deptId}
+        <set>
+            <if test="chargeCode != null and chargeCode != ''">chargeCode = #{chargeCode},</if>
+            <if test="returnChargeCode != null and returnChargeCode != ''">returnChargeCode = #{returnChargeCode},</if>
+            updateTime = NOW(),
+            updateBy = #{updateBy}
+        </set>
+        WHERE id in
+        <foreach collection="lstId" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="createTempTable">
+        CREATE TEMPORARY TABLE temp_export_box_borrow_history (
+        id bigint,
+        dept_id bigint
+        );
+    </update>
+
+    <insert id="insertTempTable">
+        INSERT INTO temp_export_box_borrow_history(id, dept_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.deptId})
+        </foreach>
+    </insert>
+
+    <delete id="dropTempTable">
+        DROP TEMPORARY TABLE IF EXISTS temp_export_box_borrow_history;
+    </delete>
+
+    <update id="changeBoxBorrowStatus">
+        UPDATE
+        filing_box_borrowrecord_${deptId}
+        SET status = #{status},
+        returnDate = NOW(),
+        returnChargeCode = #{returnChargeCode}
+<!--        updateTime = NOW(),-->
+<!--        updateBy = #{updateBy}-->
+        WHERE id in
+        <foreach collection="lstId" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <sql id="whereUnnoticed">
+        <where>
+            T.loanDate &lt; DATE_SUB(NOW(), INTERVAL 1 MONTH) AND T.status = 1 AND T.notify = 0
+        </where>
+    </sql>
+
+    <select id="retrieveAllOverdueBoxes" resultMap="FilingBoxBorrowRecordResult">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_1 AS T
+        <include refid="whereUnnoticed"/>
+        UNION ALL
+        SELECT
+        <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_2 AS T
+        <include refid="whereUnnoticed"/>
+        UNION ALL
+        SELECT
+        <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_3 AS T
+        <include refid="whereUnnoticed"/>
+        UNION ALL
+        SELECT
+        <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_4 AS T
+        <include refid="whereUnnoticed"/>
+        UNION ALL
+        SELECT
+        <include refid="queryColumns"/>
+        FROM filing_box_borrowrecord_5 AS T
+        <include refid="whereUnnoticed"/>
+    </select>
+
+    <update id="batchUpdateNotice">
+        UPDATE
+            filing_box_borrowrecord_${deptId}
+        SET
+            notify = 1
+        WHERE id in
+        <foreach collection="lstId" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

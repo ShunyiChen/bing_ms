@@ -1,0 +1,2 @@
+com.bing.common.redis.configure.RedisConfig
+com.bing.common.redis.service.RedisService

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingBorrowRecordMapper">
+
+    <resultMap id="FetchByStaffIDResult" type="com.ruoyi.filingsystem.vo.FilingStaffVO">
+        <result property="staffName"     column="staff_name" />
+        <result property="staffEmail"    column="email" />
+    </resultMap>
+
+    <resultMap id="GetBorrowRecordsByStaffIDResult" type="com.ruoyi.filingsystem.vo.FilingBorrowRecordVO">
+        <result property="loanDate"     column="LoanDate" />
+        <result property="oldSystemfileID"    column="oldSystemfileID" />
+        <result property="clientGroupName"    column="clientGroupName" />
+        <result property="clientCompanyName"    column="clientCompanyName" />
+        <result property="yearEndDate"    column="yearEndDate" />
+        <result property="fileType"    column="fileType" />
+        <result property="fileDescription"    column="fileDescription" />
+        <result property="areaLocation"    column="areaLocation" />
+        <result property="fileremarks"    column="fileremarks" />
+        <result property="boxNumber"    column="boxNumber" />
+    </resultMap>
+
+    <select id="getBorrowRecordsByStaffID" parameterType="com.ruoyi.filingsystem.dto.GetBorrowRecordDTO"
+            resultMap="GetBorrowRecordsByStaffIDResult">
+        select
+            CAST(fb.LoanDate AS DATE) as LoanDate,
+            ffp.oldSystemfileID,
+            ffp.clientGroupName,
+            ffp.clientCompanyName,
+            ffp.yearEndDate,
+            ffp.fileType,
+            ffp.fileDescription,
+            ffp.areaLocation,
+            ffp.fileremarks,
+            ffp.boxNumber
+        from
+            filling_borrowrecord fb
+        left join filling_file_profile ffp on
+            fb.FileID = ffp.oldSystemfileID
+        where
+            fb.StaffId = #{staffID} AND fb.LoanDate &lt; DATE_SUB(NOW(), INTERVAL 6 MONTH) AND fb.Status = 1
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <resultMap id="FetchBorrowFileResult" type="com.ruoyi.filingsystem.vo.FilingFetchLoanFileVO">
+        <result property="oldSystemfileID"     column="oldSystemfileID" />
+        <result property="clientGroupName"    column="clientGroupName" />
+        <result property="clientCompanyName"    column="clientCompanyName" />
+        <result property="yearEndDate"    column="yearEndDate" />
+        <result property="fileType"    column="fileType" />
+        <result property="fileDescription"    column="fileDescription" />
+        <result property="status"    column="status" />
+        <result property="deptId"    column="dept_id" />
+        <result property="areaLocation"    column="areaLocation" />
+    </resultMap>
+
+    <select id="fetchBorrowFile" parameterType="com.ruoyi.filingsystem.dto.FetchBorrowFileDTO"
+            resultMap="FetchBorrowFileResult">
+        SELECT
+            ffp.dept_id,
+            ffp.areaLocation,
+            ffp.oldSystemfileID,
+            ffp.clientGroupName,
+            ffp.clientCompanyName,
+            ffp.yearEndDate,
+            ffp.fileType,
+            ffp.fileDescription,
+            ffp.areaLocation,
+            ffp.fileremarks,
+            ffp.boxNumber,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM filling_borrowrecord fb
+                    WHERE fb.Status = 1
+                    AND fb.FileID = ffp.oldSystemfileID
+                    ) THEN 'Not Available'
+                WHEN ffp.fileState = 'DESTROYED' THEN 'Not Available'
+                WHEN ffp.fileState = 'LOSE' THEN 'Not Available'
+                WHEN ffp.isMoved = 'Y' THEN 'Not Available'
+                ELSE 'OK'
+            END AS status
+        FROM
+            filling_file_profile ffp
+        WHERE
+            ffp.oldSystemfileID = #{fileID}
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+    </select>
+
+    <insert id="borrowConfirm" parameterType="com.ruoyi.filingsystem.dto.InsertBorrowConfirmDTO">
+        INSERT INTO filling_borrowrecord(StaffId, StaffName, StaffEmail, FileID, Status, LoanDate, dept_id)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.staffID}, #{item.staffName}, #{item.staffEmail}, #{item.fileID}, #{item.status}, NOW(), #{item.deptId})
+        </foreach>
+    </insert>
+
+    <update id="updateBorrower" parameterType="com.ruoyi.filingsystem.dto.BorrowConfirmDTO">
+        UPDATE filling_file_profile
+        SET
+           borrowerStaffId=#{staffID}, borrower=#{staffName}, borrowState=1
+        WHERE oldSystemfileID IN
+        <foreach collection="fileIDs" item="fileID" open="(" close=")" separator=",">
+            #{fileID}
+        </foreach>
+    </update>
+
+    <update id="recoverBorrower" parameterType="com.ruoyi.filingsystem.dto.BorrowConfirmDTO">
+        UPDATE filling_file_profile
+        SET
+           borrowerStaffId='', borrower = '', borrowState=0
+        WHERE oldSystemfileID IN
+        <foreach collection="fileIDs" item="fileID" open="(" close=")" separator=",">
+            #{fileID}
+        </foreach>
+    </update>
+
+    <resultMap id="fetchReturnFileResult" type="com.ruoyi.filingsystem.vo.FilingFetchReturnFileVO">
+        <result property="oldSystemfileID"    column="oldSystemfileID"    />
+        <result property="clientGroupName"    column="clientGroupName"    />
+        <result property="clientCompanyName"    column="clientCompanyName"    />
+        <result property="yearEndDate"    column="yearEndDate"    />
+        <result property="fileType"    column="fileType"    />
+        <result property="loanDate"    column="loanDate"    />
+        <result property="fileDescription"    column="fileDescription"    />
+    </resultMap>
+
+    <select id="fetchReturnFile" parameterType="com.ruoyi.filingsystem.dto.FetchReturnFileDTO" resultMap="fetchReturnFileResult">
+        select
+            ffp.oldSystemfileID,
+            ffp.fileDescription,
+            ffp.clientGroupName,
+            ffp.clientCompanyName,
+            ffp.fileType,
+            ffp.yearEndDate,
+            CASE
+            WHEN EXISTS (
+                    SELECT 1
+                    FROM filling_borrowrecord fb
+                    where
+                    fb.Status = 1 AND fb.FileID = ffp.oldSystemfileID
+                ) THEN 'OK'
+                ELSE 'Not in Borrowed List'
+            END AS status
+        from
+            filling_file_profile ffp
+        where
+            ffp.oldSystemfileID = #{fileID}
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+    </select>
+
+    <update id="returnConfirm" parameterType="java.lang.String">
+        UPDATE filling_borrowrecord
+        SET Status = 0,ReturnDate = NOW()
+        WHERE  FileID IN
+        <foreach collection="array" item="fileID" open="(" close=")" separator=",">
+            #{fileID}
+        </foreach>
+         and Status = 1
+    </update>
+
+    <resultMap type="com.ruoyi.filingsystem.domain.FilingFileLoanReturn" id="FilingFileLoanReturnResult">
+        <result property="fileID"    column="FileID"    />
+        <result property="fileDescription"    column="fileDescription"    />
+        <result property="clientGroupName"    column="clientGroupName"    />
+        <result property="clientCompanyName"    column="clientCompanyName"    />
+        <result property="clientNumber"    column="clientNumber"    />
+        <result property="fileType"    column="fileType"    />
+        <result property="yearEndDate"    column="yearEndDate"    />
+        <result property="areaLocation"    column="areaLocation"    />
+        <result property="borrowerGPN"    column="StaffId"    />
+        <result property="borrowerEmail"    column="StaffEmail"    />
+        <result property="staffName"    column="StaffName"    />
+          <!--没使用的到的-->
+        <result property="loanReturnID"    column="loanReturnID"    />
+        <result property="returnDate"    column="returnDate"    />
+        <result property="operateEmail"    column="operateEmail"    />
+        <result property="loanDate"    column="loanDate"    />
+        <result property="dueDate"    column="dueDate"    />
+        <result property="emailMark"    column="emailMark"    />
+        <result property="returnStatus"    column="returnStatus"    />
+        <result property="transferMark"    column="transferMark"    />
+        <result property="transferHistory"    column="transferHistory"    />
+    </resultMap>
+
+    <select id="selectByFileIDs" resultMap="FilingFileLoanReturnResult">
+        SELECT
+            ffp.oldSystemfileID,
+            ffp.fileDescription,
+            ffp.clientGroupName,
+            ffp.clientCompanyName,
+            ffp.clientNumber ,
+            ffp.fileType,
+            ffp.yearEndDate,
+            ffp.areaLocation,
+            fb.StaffId,
+            fb.StaffName,
+            fb.StaffEmail,
+            fb.FileID
+        FROM
+            filling_file_profile ffp
+        LEFT JOIN
+            filling_borrowrecord fb ON ffp.oldSystemfileID = fb.FileID
+        WHERE fb.Status=1 and fb.FileID IN
+        <foreach collection="array" item="fileID" open="(" close=")" separator=",">
+            #{fileID}
+        </foreach>
+    </select>
+
+    <select id="getSystemDate" resultType="java.lang.String">
+       select NOW()
+    </select>
+</mapper>

@@ -1,0 +1,1 @@
+import{_ as o}from"./index-CN_1ak7f.js";import{r as s,o as l,c as n,d as t,f as c}from"./index-CAgRbO-3.js";const m={__name:"index",setup(u){const r=s("/legaldb/prod-api/druid/login.html");return(d,e)=>(l(),n("div",null,[t(c(o),{src:r.value,"onUpdate:src":e[0]||(e[0]=a=>r.value=a)},null,8,["src"])]))}};export{m as default};

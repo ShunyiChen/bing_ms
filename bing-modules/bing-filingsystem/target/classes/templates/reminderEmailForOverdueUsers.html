@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Reminder: File Box Loan Overdue by 1 Month</title>
+</head>
+
+<body>
+    <p th:text="'Hi ' + ${staffName} + ' (Staff Number : ' + ${staffId} + ')'">Hi [username] (Staff Number : [staffId])</p>
+
+    <h1 th:text="'Note that this is a system-generated report, please do not respond to this email For assistance, please contact: '+${filingRoom}"></h1><br><br>
+    <p>
+        <span th:text="'Please note that you have ' + ${total} + ' boxes that have not been returned for over a month at '+ ${date}">
+            Please note that you have [total] boxes that have not been returned for over a months at [date]
+        </span>
+    </p>
+
+    <h2>Here is the list of boxes that have not been returned:</h2>
+    <ul>
+        <li th:each="file : ${files}">
+            <span th:text="'BoxNo:'+ ${file}">BoxNo: [file]</span>
+        </li>
+    </ul>
+    <table>
+        <tr>
+            <td th:utext="'According to our hardcopy file retrieval &amp; return policy, you have to return these boxes to filing room within 7 working days.<br><br>Yours truly,<br>'+${filingRoom}+'<br><br>Date: '+${date}">
+                According to our hardcopy file retrieval &amp; return policy, you have to return this file to filing room within 7 working days.<br><br>Yours truly,<br>[filingRoom}<br><br>Date: [date]
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

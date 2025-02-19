@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.filingsystem.mapper.FilingBoxProfileMapper">
+    <resultMap type="com.ruoyi.filingsystem.domain.FilingAttachment" id="FilingAttachmentResult">
+        <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="uploader"    column="uploader"    />
+        <result property="uploadDate"    column="upload_date"    />
+        <result property="status"    column="status"    />
+        <result property="boxProfileId"    column="box_profile_id"    />
+        <result property="usage"    column="usage"    />
+    </resultMap>
+    <resultMap type="com.ruoyi.filingsystem.domain.FilingBoxProfile" id="FilingBoxProfileResult">
+        <result property="id"    column="id"    />
+        <result property="oldSystemboxMark"    column="oldSystemboxMark"    />
+        <result property="boxDepartment"    column="boxDepartment"    />
+        <result property="boxNumber"    column="boxNumber"    />
+        <result property="vendorNumber"    column="vendorNumber"    />
+        <result property="vendorBarcode"    column="vendorBarcode"    />
+        <result property="retentionDate"    column="retentionDate"    />
+        <result property="chargeCode"    column="chargeCode"    />
+        <result property="approverLPN"    column="approvedStaffIdLpn"    />
+        <result property="approverEmail"    column="approverEmail"    />
+        <result property="supportingDocument"    column="supportingDocument"    />
+        <result property="requesterLPN"    column="staffIdLpn"    />
+        <result property="requesterEmail"    column="requesterEmail"    />
+        <result property="boxState"    column="boxState"    />
+        <result property="areaLocation"    column="areaLocation"    />
+        <result property="borrowState"    column="borrowState"    />
+        <result property="borrowerStaffId"    column="borrowerStaffId"    />
+        <result property="borrowerName"    column="borrowerName"    />
+        <result property="destructionTime"    column="destructionTime"    />
+        <result property="destructionPeople"    column="destructionPeople"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="createBy"    column="createBy"    />
+        <result property="updateBy"    column="updateBy"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="accountCode"    column="accountCode"    />
+        <result property="boxRemark"    column="boxRemark"    />
+    </resultMap>
+    <resultMap type="com.ruoyi.filingsystem.domain.FilingBoxOperationRecord" id="FilingBoxEditHistoryResult">
+        <result property="id"    column="id"    />
+        <result property="oldSystemboxMark"    column="oldSystemboxMark"    />
+        <result property="boxDepartment"    column="boxDepartment"    />
+        <result property="boxNumber"    column="boxNumber"    />
+        <result property="vendorNumber"    column="vendorNumber"    />
+        <result property="vendorBarcode"    column="vendorBarcode"    />
+        <result property="retentionDate"    column="retentionDate"    />
+        <result property="chargeCode"    column="chargeCode"    />
+        <result property="approverLPN"    column="approvedStaffIdLpn"    />
+        <result property="approverEmail"    column="approverEmail"    />
+        <result property="supportingDocument"    column="supportingDocument"    />
+        <result property="requesterLPN"    column="staffIdLpn"    />
+        <result property="requesterEmail"    column="requesterEmail"    />
+        <result property="boxState"    column="boxState"    />
+        <result property="areaLocation"    column="areaLocation"    />
+        <result property="borrowState"    column="borrowState"    />
+        <result property="borrowerStaffId"    column="borrowerStaffId"    />
+        <result property="borrowerName"    column="borrowerName"    />
+        <result property="destructionTime"    column="destructionTime"    />
+        <result property="destructionPeople"    column="destructionPeople"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="createBy"    column="createBy"    />
+        <result property="updateBy"    column="updateBy"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="accountCode"    column="accountCode"    />
+        <result property="boxRemark"    column="boxRemark"    />
+        <result property="action"    column="action"    />
+        <result property="operator"    column="operator"    />
+        <result property="operationTime"    column="operationTime"    />
+        <result property="boxId"    column="boxId"    />
+        <result property="filesJson"    column="files_json"    />
+    </resultMap>
+
+    <sql id="findFilingBoxProfile1">
+        select
+        <include refid="queryColumns"/>
+        from
+            filing_box_profile_1 AS T
+        where id = #{id}
+    </sql>
+    <sql id="findFilingBoxProfile2">
+        select
+        <include refid="queryColumns"/>
+        from
+            filing_box_profile_2 AS T
+        where id = #{id}
+    </sql>
+    <sql id="findFilingBoxProfile3">
+        select
+        <include refid="queryColumns"/>
+        from
+            filing_box_profile_3 AS T
+        where id = #{id}
+    </sql>
+    <sql id="findFilingBoxProfile4">
+        select
+        <include refid="queryColumns"/>
+        from
+            filing_box_profile_4 AS T
+        where id = #{id}
+    </sql>
+    <sql id="findFilingBoxProfile5">
+        select
+        <include refid="queryColumns"/>
+        from
+            filing_box_profile_5 AS T
+        where id = #{id}
+    </sql>
+
+    <select id="findBoxProfileByID" parameterType="com.ruoyi.filingsystem.dto.FindBoxProfileDTO"
+            resultMap="FilingBoxProfileResult">
+        <choose>
+            <when test="deptId == 1">
+                <include refid="findFilingBoxProfile1"/>
+            </when>
+            <when test="deptId == 2">
+                <include refid="findFilingBoxProfile2"/>
+            </when>
+            <when test="deptId == 3">
+                <include refid="findFilingBoxProfile3"/>
+            </when>
+            <when test="deptId == 4">
+                <include refid="findFilingBoxProfile4"/>
+            </when>
+            <when test="deptId == 5">
+                <include refid="findFilingBoxProfile5"/>
+            </when>
+        </choose>
+    </select>
+
+    <sql id="queryColumns">
+        T.id, T.oldSystemboxMark, T.boxDepartment, T.boxNumber, T.vendorNumber, T.vendorBarcode,
+        T.retentionDate, T.chargeCode, T.approvedStaffIdLpn, T.approverEmail, T.supportingDocument,
+        T.staffIdLpn, T.requesterEmail, T.boxState, T.areaLocation, T.borrowState, T.borrowerStaffId,
+        T.borrowerName, T.destructionTime, T.destructionPeople, T.createTime, T.updateTime, T.dept_id,
+        T.accountCode, T.boxRemark,
+        T.createBy, T.updateBy
+    </sql>
+    <sql id="selectFilingBoxProfile1">
+        select
+            <include refid="queryColumns"/>
+        from
+            filing_box_profile_1 AS T
+        <include refid="whereEqualsTo"/>
+    </sql>
+    <sql id="selectFilingBoxProfile2">
+        select
+        <include refid="queryColumns"/>
+        from
+            filing_box_profile_2 AS T
+        <include refid="whereEqualsTo"/>
+    </sql>
+    <sql id="selectFilingBoxProfile3">
+        select
+        <include refid="queryColumns"/>
+        from
+            filing_box_profile_3 AS T
+        <include refid="whereEqualsTo"/>
+    </sql>
+    <sql id="selectFilingBoxProfile4">
+        select
+        <include refid="queryColumns"/>
+        from
+            filing_box_profile_4 AS T
+        <include refid="whereEqualsTo"/>
+    </sql>
+    <sql id="selectFilingBoxProfile5">
+        select
+        <include refid="queryColumns"/>
+        from
+            filing_box_profile_5 AS T
+        <include refid="whereEqualsTo"/>
+    </sql>
+    <sql id="whereEqualsTo">
+        <where>
+            <if test="vendorBarcode != null and vendorBarcode != ''">T.vendorBarcode LIKE CONCAT('%', #{vendorBarcode}, '%')</if>
+            <if test="boxStatus != null and boxStatus != ''"> and T.boxState = #{boxStatus}</if>
+            <if test="boxDepartment != null and boxDepartment != ''">
+                and T.boxDepartment LIKE CONCAT('%', #{boxDepartment}, '%')
+            </if>
+            <if test="boxNo != null and boxNo != ''">
+                and T.boxNumber LIKE CONCAT('%', #{boxNo}, '%')
+            </if>
+            <if test="chargeCode != null and chargeCode != ''"> and T.chargeCode = #{chargeCode}</if>
+            <if test="approverLPN != null and approverLPN != ''"> and T.approvedStaffIdLpn = #{approverLPN}</if>
+            <if test="approverEmail != null and approverEmail != ''"> and T.approverEmail = #{approverEmail}</if>
+            <if test="requesterLPN != null and requesterLPN != ''"> and T.staffIdLpn = #{requesterLPN}</if>
+            <if test="requesterEmail != null and requesterEmail != ''"> and T.requesterEmail = #{requesterEmail}</if>
+            <if test="updatedTimeFrom != null and updatedTimeTo != null">
+                AND T.updateTime BETWEEN #{updatedTimeFrom, javaType=java.util.Date} AND #{updatedTimeTo, javaType=java.util.Date}
+            </if>
+            <if test="retentionDateFrom != null and retentionDateTo != null">
+                AND T.retentionDate BETWEEN #{retentionDateFrom, javaType=java.util.Date} AND #{retentionDateTo, javaType=java.util.Date}
+            </if>
+            <if test="destructionTimeFrom != null and destructionTimeTo != null">
+                AND T.destructionTime BETWEEN #{destructionTimeFrom, javaType=java.util.Date} AND #{destructionTimeTo, javaType=java.util.Date}
+            </if>
+            <if test="createdDateFrom != null and createdDateTo != null">
+                AND T.createTime BETWEEN #{createdDateFrom, javaType=java.util.Date} AND #{createdDateTo, javaType=java.util.Date}
+            </if>
+            <if test="boxRemark != null and boxRemark != ''"> and T.boxRemark = #{boxRemark}</if>
+            <if test="accountCode != null and accountCode != ''"> and T.accountCode = #{accountCode}</if>
+            <if test="borrowState != null">
+                <if test="borrowState == 0">
+                    and T.borrowState = #{borrowState}
+                    and T.boxState NOT IN('DESTROYED','PERM OUT')
+                </if>
+                <if test="borrowState == 1">
+                    and (
+                        T.borrowState = #{borrowState}
+                        or T.boxState IN('DESTROYED','PERM OUT')
+                    )
+                </if>
+            </if>
+            <if test="multipleSelection != null">
+                AND EXISTS (
+                    SELECT 1
+                    FROM filing_temp_box_profile_export tmp
+                    WHERE T.id = tmp.id AND T.dept_id = tmp.dept_id
+                )
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </sql>
+
+    <select id="searchBoxProfileList"
+            parameterType="com.ruoyi.filingsystem.dto.SearchBoxProfileDTO"
+            resultType="com.ruoyi.filingsystem.domain.FilingBoxProfile"
+            resultMap="FilingBoxProfileResult">
+        <if test="deptId != null">
+            <choose>
+                <when test="deptId == 1">
+                    <include refid="selectFilingBoxProfile1"/>
+                </when>
+                <when test="deptId == 2">
+                    <include refid="selectFilingBoxProfile2"/>
+                </when>
+                <when test="deptId == 3">
+                    <include refid="selectFilingBoxProfile3"/>
+                </when>
+                <when test="deptId == 4">
+                    <include refid="selectFilingBoxProfile4"/>
+                </when>
+                <when test="deptId == 5">
+                    <include refid="selectFilingBoxProfile5"/>
+                </when>
+                <otherwise>
+                    <include refid="selectFilingBoxProfile1"/>
+                    UNION ALL
+                    <include refid="selectFilingBoxProfile2"/>
+                    UNION ALL
+                    <include refid="selectFilingBoxProfile3"/>
+                    UNION ALL
+                    <include refid="selectFilingBoxProfile4"/>
+                    UNION ALL
+                    <include refid="selectFilingBoxProfile5"/>
+                </otherwise>
+            </choose>
+        </if>
+        <if test="deptId == null">
+            <include refid="selectFilingBoxProfile1"/>
+            UNION ALL
+            <include refid="selectFilingBoxProfile2"/>
+            UNION ALL
+            <include refid="selectFilingBoxProfile3"/>
+            UNION ALL
+            <include refid="selectFilingBoxProfile4"/>
+            UNION ALL
+            <include refid="selectFilingBoxProfile5"/>
+        </if>
+    </select>
+
+    <insert id="insertFilingBoxProfile" parameterType="com.ruoyi.filingsystem.dto.AddBoxProfileDTO"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into filing_box_profile_${deptId}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            oldSystemboxMark,
+            <if test="boxDepartment != null">boxDepartment,</if>
+            <if test="boxNumber != null">boxNumber,</if>
+            <if test="vendorNumber != null">vendorNumber,</if>
+            <if test="vendorBarcode != null">vendorBarcode,</if>
+            <if test="retentionDate != null">retentionDate,</if>
+            <if test="chargeCode != null">chargeCode,</if>
+            <if test="approverLPN != null">approvedStaffIdLpn,</if>
+            <if test="approverEmail != null">approverEmail,</if>
+            <if test="supportingDocument != null">supportingDocument,</if>
+            <if test="requesterLPN != null">staffIdLpn,</if>
+            <if test="requesterEmail != null">requesterEmail,</if>
+            <if test="boxStatus != null">boxState,</if>
+            <if test="areaLocation != null">areaLocation,</if>
+                borrowState,
+                createTime,
+                updateTime,
+            <if test="deptId != null">dept_id,</if>
+            <if test="accountCode != null">accountCode,</if>
+            <if test="boxRemark != null">boxRemark,</if>
+            <if test="createBy != null">createBy,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            1,
+            <if test="boxDepartment != null">#{boxDepartment},</if>
+            <if test="boxNumber != null">#{boxNumber},</if>
+            <if test="vendorNumber != null">#{vendorNumber},</if>
+            <if test="vendorBarcode != null">#{vendorBarcode},</if>
+            <if test="retentionDate != null">#{retentionDate},</if>
+            <if test="chargeCode != null">#{chargeCode},</if>
+            <if test="approverLPN != null">#{approverLPN},</if>
+            <if test="approverEmail != null">#{approverEmail},</if>
+            <if test="supportingDocument != null">#{supportingDocument},</if>
+            <if test="requesterLPN != null">#{requesterLPN},</if>
+            <if test="requesterEmail != null">#{requesterEmail},</if>
+            <if test="boxStatus != null">#{boxStatus},</if>
+            <if test="areaLocation != null">#{areaLocation},</if>
+             0,
+            NOW(),
+            NOW(),
+            <if test="deptId != null">#{deptId},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="boxRemark != null">#{boxRemark},</if>
+            <if test="createBy != null">#{createBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFilingBoxProfile" parameterType="com.ruoyi.filingsystem.dto.UpdateBoxProfileDTO">
+        update filing_box_profile_${deptId}
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="boxDepartment != null">boxDepartment = #{boxDepartment},</if>
+            <if test="boxNumber != null">boxNumber = #{boxNumber},</if>
+            <if test="vendorNumber != null">vendorNumber = #{vendorNumber},</if>
+            <if test="vendorBarcode != null">vendorBarcode = #{vendorBarcode},</if>
+            <if test="retentionDate != null">retentionDate = #{retentionDate},</if>
+            <if test="chargeCode != null">chargeCode = #{chargeCode},</if>
+            <if test="approverLPN != null">approvedStaffIdLpn = #{approverLPN},</if>
+            <if test="approverEmail != null">approverEmail = #{approverEmail},</if>
+            <if test="requesterLPN != null">staffIdLpn = #{requesterLPN},</if>
+            <if test="requesterEmail != null">requesterEmail = #{requesterEmail},</if>
+            updateTime = NOW(),
+            <if test="accountCode != null">accountCode = #{accountCode},</if>
+            <if test="boxRemark != null">boxRemark = #{boxRemark},</if>
+            <if test="updateBy != null">updateBy = #{updateBy},</if>
+        </trim>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <update id="updateBoxBorrowState" parameterType="com.ruoyi.filingsystem.dto.UpdateBoxBorrowStateDTO">
+        update filing_box_profile_${deptId}
+        <set>
+            borrowState = #{borrowState},
+            borrowerStaffId = #{borrowerStaffId},
+            borrowerName = #{borrowerName}
+        </set>
+        <where>
+            id in
+            <foreach item="id" index="index" collection="lstId" open="(" separator="," close=" )">
+                #{id}
+            </foreach>
+        </where>
+    </update>
+
+
+    <update id="createTempTable">
+        CREATE TEMPORARY TABLE ${tbName} (
+            id bigint,
+            dept_id bigint
+        );
+    </update>
+
+    <insert id="insertTempTable">
+        INSERT INTO ${tbName}(id, dept_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.deptId})
+        </foreach>
+    </insert>
+
+    <delete id="dropTempTable">
+        DROP TEMPORARY TABLE IF EXISTS ${tbName};
+    </delete>
+
+    <update id="destroyBox">
+        UPDATE filing_box_profile_${deptId}
+        <set>
+            boxState = 'DESTROYED',
+            destructionTime = NOW(),
+            destructionPeople = #{updateBy},
+            updateTime = NOW(),
+            chargeCode = #{chargeCode}
+        </set>
+        WHERE id in
+        <foreach item="id" index="index" collection="lstId" open="(" separator="," close=" )">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="permOutBox">
+        UPDATE filing_box_profile_${deptId}
+        <set>
+            boxState = 'PERM OUT',
+            updateBy = #{updateBy},
+            updateTime = NOW(),
+            chargeCode = #{chargeCode}
+        </set>
+        WHERE id in
+        <foreach item="id" index="index" collection="lstId" open="(" separator="," close=" )">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="editCharge">
+        UPDATE filing_box_profile_${deptId}
+        <set>
+            updateBy = #{updateBy},
+            updateTime = NOW(),
+            chargeCode = #{chargeCode}
+        </set>
+        WHERE id in
+        <foreach item="id" index="index" collection="lstId" open="(" separator="," close=" )">
+            #{id}
+        </foreach>
+    </update>
+
+    <insert id="insertApprovalFiles">
+        insert into filing_box_attachments_${deptId}
+        (
+            dept_id,
+            file_name,
+            file_type,
+            file_size,
+            file_path,
+            uploader,
+            upload_date,
+            status,
+            box_profile_id,
+            `usage`
+        )
+        values
+        <foreach collection ="list" item="item" separator =",">
+            (#{item.deptId}, #{item.fileName}, #{item.fileType}, #{item.fileSize},
+            #{item.filePath}, #{item.uploader}, NOW(), #{item.status}, #{item.boxProfileId}, #{item.usage})
+        </foreach>
+    </insert>
+
+    <sql id="attachColumns">
+        T.id,
+        T.dept_id,
+        T.file_name,
+        T.file_type,
+        T.file_size,
+        T.file_path,
+        T.uploader,
+        T.upload_date,
+        T.status,
+        T.box_profile_id,
+        T.usage
+    </sql>
+
+    <select id="findFilingAttachmentList" resultMap="FilingAttachmentResult"
+                resultType="com.ruoyi.filingsystem.dto.FindAttachmentsDTO">
+        select
+            <include refid="attachColumns"/>
+        from
+        filing_box_attachments_${deptId} AS T
+        <where>
+            T.status != 'inactive' AND
+            T.box_profile_id in
+            <foreach item="id" index="index" collection="lstId" open="(" separator="," close=" )">
+                #{id}
+            </foreach>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <update id="deactivateApprovalFile" parameterType="com.ruoyi.filingsystem.dto.RemoveAttachmentDTO">
+        update filing_box_attachments_${deptId}
+        <set>
+            status = 'inactive'
+        </set>
+        where
+            dept_id = #{deptId} and box_profile_id = #{boxId} and id = #{fileId}
+    </update>
+
+    <sql id="queryEditHistoryColumns">
+        T.id, T.boxId,T.oldSystemboxMark, T.boxDepartment, T.boxNumber, T.vendorNumber, T.vendorBarcode,
+        T.retentionDate, T.chargeCode, T.approvedStaffIdLpn, T.approverEmail, T.supportingDocument,
+        T.staffIdLpn, T.requesterEmail, T.boxState, T.areaLocation, T.borrowState, T.borrowerStaffId,
+        T.borrowerName, T.destructionTime, T.destructionPeople, T.createTime, T.updateTime, T.dept_id,
+        T.accountCode, T.boxRemark,
+        T.createBy, T.updateBy, T.action, T.operator, T.operationTime, T.files_json
+    </sql>
+    <sql id="selectBoxEditHistoryProfile1">
+        select
+        <include refid="queryEditHistoryColumns"/>
+        from
+        filing_box_operation_record_1 AS T
+        <include refid="whereEqualsToForEditHistory"/>
+    </sql>
+    <sql id="selectBoxEditHistoryProfile2">
+        select
+        <include refid="queryEditHistoryColumns"/>
+        from
+        filing_box_operation_record_2 AS T
+        <include refid="whereEqualsToForEditHistory"/>
+    </sql>
+    <sql id="selectBoxEditHistoryProfile3">
+        select
+        <include refid="queryEditHistoryColumns"/>
+        from
+        filing_box_operation_record_3 AS T
+        <include refid="whereEqualsToForEditHistory"/>
+    </sql>
+    <sql id="selectBoxEditHistoryProfile4">
+        select
+        <include refid="queryEditHistoryColumns"/>
+        from
+        filing_box_operation_record_4 AS T
+        <include refid="whereEqualsToForEditHistory"/>
+    </sql>
+    <sql id="selectBoxEditHistoryProfile5">
+        select
+        <include refid="queryEditHistoryColumns"/>
+        from
+        filing_box_operation_record_5 AS T
+        <include refid="whereEqualsToForEditHistory"/>
+    </sql>
+
+    <sql id="whereEqualsToForEditHistory">
+        <where>
+            <if test="vendorBarcode != null and vendorBarcode != ''">T.vendorBarcode LIKE CONCAT('%', #{vendorBarcode}, '%')</if>
+            <if test="boxStatus != null and boxStatus != ''"> and T.boxState = #{boxStatus}</if>
+            <if test="boxDepartment != null and boxDepartment != ''">
+                and T.boxDepartment LIKE CONCAT('%', #{boxDepartment}, '%')
+            </if>
+            <if test="boxNo != null and boxNo != ''">
+                and T.boxNumber LIKE CONCAT('%', #{boxNo}, '%')
+            </if>
+            <if test="chargeCode != null and chargeCode != ''"> and T.chargeCode = #{chargeCode}</if>
+            <if test="approverLPN != null and approverLPN != ''"> and T.approvedStaffIdLpn = #{approverLPN}</if>
+            <if test="approverEmail != null and approverEmail != ''"> and T.approverEmail = #{approverEmail}</if>
+            <if test="requesterLPN != null and requesterLPN != ''"> and T.staffIdLpn = #{requesterLPN}</if>
+            <if test="requesterEmail != null and requesterEmail != ''"> and T.requesterEmail = #{requesterEmail}</if>
+            <if test="updatedTimeFrom != null and updatedTimeTo != null">
+                AND T.updateTime BETWEEN #{updatedTimeFrom, javaType=java.util.Date} AND #{updatedTimeTo, javaType=java.util.Date}
+            </if>
+            <if test="retentionDateFrom != null and retentionDateTo != null">
+                AND T.retentionDate BETWEEN #{retentionDateFrom, javaType=java.util.Date} AND #{retentionDateTo, javaType=java.util.Date}
+            </if>
+            <if test="destructionTimeFrom != null and destructionTimeTo != null">
+                AND T.destructionTime BETWEEN #{destructionTimeFrom, javaType=java.util.Date} AND #{destructionTimeTo, javaType=java.util.Date}
+            </if>
+            <if test="createdDateFrom != null and createdDateTo != null">
+                AND T.createTime BETWEEN #{createdDateFrom, javaType=java.util.Date} AND #{createdDateTo, javaType=java.util.Date}
+            </if>
+            <if test="boxRemark != null and boxRemark != ''"> and T.boxRemark = #{boxRemark}</if>
+            <if test="accountCode != null and accountCode != ''"> and T.accountCode = #{accountCode}</if>
+            <if test="borrowState != null">
+                <if test="borrowState == 0">
+                    and T.borrowState = #{borrowState}
+                    and T.boxState NOT IN('DESTROYED','PERM OUT')
+                </if>
+                <if test="borrowState == 1">
+                    and (
+                    T.borrowState = #{borrowState}
+                    or T.boxState IN('DESTROYED','PERM OUT')
+                    )
+                </if>
+            </if>
+            <if test="multipleSelection != null">
+                AND EXISTS (
+                SELECT 1
+                FROM filing_temp_box_edit_history_export tmp
+                WHERE T.id = tmp.id AND T.dept_id = tmp.dept_id
+                )
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </sql>
+
+    <select id="searchBoxEditHistoryList"
+            parameterType="com.ruoyi.filingsystem.dto.SearchBoxProfileDTO"
+            resultType="com.ruoyi.filingsystem.domain.FilingBoxOperationRecord"
+            resultMap="FilingBoxEditHistoryResult">
+        <if test="deptId != null">
+            <choose>
+                <when test="deptId == 1">
+                    <include refid="selectBoxEditHistoryProfile1"/>
+                </when>
+                <when test="deptId == 2">
+                    <include refid="selectBoxEditHistoryProfile2"/>
+                </when>
+                <when test="deptId == 3">
+                    <include refid="selectBoxEditHistoryProfile3"/>
+                </when>
+                <when test="deptId == 4">
+                    <include refid="selectBoxEditHistoryProfile4"/>
+                </when>
+                <when test="deptId == 5">
+                    <include refid="selectBoxEditHistoryProfile5"/>
+                </when>
+                <otherwise>
+                    <include refid="selectBoxEditHistoryProfile1"/>
+                    UNION ALL
+                    <include refid="selectBoxEditHistoryProfile2"/>
+                    UNION ALL
+                    <include refid="selectBoxEditHistoryProfile3"/>
+                    UNION ALL
+                    <include refid="selectBoxEditHistoryProfile4"/>
+                    UNION ALL
+                    <include refid="selectBoxEditHistoryProfile5"/>
+                </otherwise>
+            </choose>
+        </if>
+        <if test="deptId == null">
+            <include refid="selectBoxEditHistoryProfile1"/>
+            UNION ALL
+            <include refid="selectBoxEditHistoryProfile2"/>
+            UNION ALL
+            <include refid="selectBoxEditHistoryProfile3"/>
+            UNION ALL
+            <include refid="selectBoxEditHistoryProfile4"/>
+            UNION ALL
+            <include refid="selectBoxEditHistoryProfile5"/>
+        </if>
+    </select>
+
+</mapper>

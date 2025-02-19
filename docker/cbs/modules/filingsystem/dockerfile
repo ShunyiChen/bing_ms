@@ -1,0 +1,28 @@
+# 基础镜像
+FROM cbs-acr-shanghai-registry.cn-shanghai.cr.aliyuncs.com/ns-shanghai/cbs-acr-shanghai:21-jdk
+# author
+MAINTAINER cbs
+# # 设置环境变量TZ，指定时区
+# ENV TZ=Asia/Shanghai
+#
+# # 安装时区数据，并链接到/etc/localtime
+# RUN apt-get update && \
+#     apt-get install -y tzdata && \
+#     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+#     echo $TZ > /etc/timezone && \
+#     dpkg-reconfigure -f noninteractive tzdata && \
+#     rm -rf /var/lib/apt/lists/*
+# 解决docker控制台打印日期时区不对的问题
+# 设置环境变量TZ为Asia/Shanghai
+ENV TIME_ZONE=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TIME_ZONE /etc/localtime
+# 挂载目录
+VOLUME /home/cbs
+# 创建目录
+RUN mkdir -p /home/cbs
+# 指定路径
+WORKDIR /home/cbs
+# 复制jar文件到路径
+COPY ./jar/cbs-modules-filingsystem.jar /home/cbs/cbs-modules-filingsystem.jar
+# 启动系统服务
+ENTRYPOINT ["java","-jar","cbs-modules-filingsystem.jar"]

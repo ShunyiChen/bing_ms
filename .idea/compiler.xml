@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="bing-common-datascope" />
+        <module name="bing-gateway" />
+        <module name="bing-common-core" />
+        <module name="bing-visual-monitor" />
+        <module name="bing-modules-file" />
+        <module name="bing-api-system" />
+        <module name="bing-modules-system" />
+        <module name="bing-common-seata" />
+        <module name="bing-common-security" />
+        <module name="bing-auth" />
+        <module name="bing-common-log" />
+        <module name="bing-modules-bing" />
+        <module name="bing-common-datasource" />
+        <module name="bing-common-redis" />
+        <module name="bing-modules-job" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="bing" options="-parameters" />
+      <module name="bing-api" options="-parameters" />
+      <module name="bing-api-system" options="-parameters" />
+      <module name="bing-auth" options="-parameters" />
+      <module name="bing-common" options="-parameters" />
+      <module name="bing-common-core" options="-parameters" />
+      <module name="bing-common-datascope" options="-parameters" />
+      <module name="bing-common-datasource" options="-parameters" />
+      <module name="bing-common-log" options="-parameters" />
+      <module name="bing-common-redis" options="-parameters" />
+      <module name="bing-common-seata" options="-parameters" />
+      <module name="bing-common-security" options="-parameters" />
+      <module name="bing-gateway" options="-parameters" />
+      <module name="bing-modules" options="-parameters" />
+      <module name="bing-modules-bing" options="-parameters" />
+      <module name="bing-modules-file" options="-parameters" />
+      <module name="bing-modules-job" options="-parameters" />
+      <module name="bing-modules-system" options="-parameters" />
+      <module name="bing-visual" options="-parameters" />
+      <module name="bing-visual-monitor" options="-parameters" />
+    </option>
+  </component>
+</project>
