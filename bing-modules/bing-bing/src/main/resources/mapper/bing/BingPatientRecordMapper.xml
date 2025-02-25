@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bing.bing.mapper.BingPatientRecordMapper">
+    
+    <resultMap type="BingPatientRecord" id="BingPatientRecordResult">
+        <result property="id"    column="id"    />
+        <result property="institutionCode"    column="institution_code"    />
+        <result property="institutionName"    column="institution_name"    />
+        <result property="medicalRecordNumber"    column="medical_record_number"    />
+        <result property="hospitalizationCount"    column="hospitalization_count"    />
+        <result property="admissionDate"    column="admission_date"    />
+        <result property="dischargeDate"    column="discharge_date"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="gender"    column="gender"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="age"    column="age"    />
+        <result property="dischargeMethod"    column="discharge_method"    />
+        <result property="type"    column="type"    />
+        <result property="createBy"    column="createBy"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateBy"    column="updateBy"    />
+        <result property="updateTime"    column="updateTime"    />
+    </resultMap>
+
+    <sql id="selectBingPatientRecordVo">
+        select id, institution_code, institution_name, medical_record_number, hospitalization_count, admission_date, discharge_date, patient_name, gender, birth_date, age, discharge_method, type, createBy, createTime, updateBy, updateTime from bing_patient_record
+    </sql>
+
+    <select id="selectBingPatientRecordList" parameterType="BingPatientRecord" resultMap="BingPatientRecordResult">
+        <include refid="selectBingPatientRecordVo"/>
+        <where>  
+            <if test="institutionCode != null  and institutionCode != ''"> and institution_code = #{institutionCode}</if>
+            <if test="institutionName != null  and institutionName != ''"> and institution_name like concat('%', #{institutionName}, '%')</if>
+            <if test="medicalRecordNumber != null  and medicalRecordNumber != ''"> and medical_record_number = #{medicalRecordNumber}</if>
+            <if test="hospitalizationCount != null "> and hospitalization_count = #{hospitalizationCount}</if>
+            <if test="admissionDate != null "> and admission_date = #{admissionDate}</if>
+            <if test="dischargeDate != null "> and discharge_date = #{dischargeDate}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="birthDate != null "> and birth_date = #{birthDate}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="dischargeMethod != null "> and discharge_method = #{dischargeMethod}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>
+            <if test="createTime != null "> and createTime = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and updateBy = #{updateBy}</if>
+            <if test="updateTime != null "> and updateTime = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBingPatientRecordById" parameterType="Long" resultMap="BingPatientRecordResult">
+        <include refid="selectBingPatientRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBingPatientRecord" parameterType="com.bing.bing.dto.BatchAddDTO">
+        INSERT INTO bing_patient_record
+            (institution_code, institution_name, medical_record_number, hospitalization_count, admission_date, discharge_date, patient_name, gender, birth_date, age, discharge_method, `type`, createBy, createTime, updateBy, updateTime)
+        VALUES
+        <foreach collection="data" item="item" separator=",">
+            (#{item.institutionCode}, #{item.institutionName}, #{item.medicalRecordNumber}, #{item.hospitalizationCount}, #{item.admissionDate}
+            ,#{item.dischargeDate}, #{item.patientName}, #{item.gender}, #{item.birthDate}, #{item.age}, #{item.dischargeMethod}, #{item.type}, #{item.createBy}, NOW(), #{item.createBy}, NOW())
+        </foreach>
+    </insert>
+
+<!--    <insert id="insertBingPatientRecord" parameterType="BingPatientRecord" useGeneratedKeys="true" keyProperty="id">-->
+<!--        insert into bing_patient_record-->
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--            <if test="institutionCode != null and institutionCode != ''">institution_code,</if>-->
+<!--            <if test="institutionName != null and institutionName != ''">institution_name,</if>-->
+<!--            <if test="medicalRecordNumber != null and medicalRecordNumber != ''">medical_record_number,</if>-->
+<!--            <if test="hospitalizationCount != null">hospitalization_count,</if>-->
+<!--            <if test="admissionDate != null">admission_date,</if>-->
+<!--            <if test="dischargeDate != null">discharge_date,</if>-->
+<!--            <if test="patientName != null and patientName != ''">patient_name,</if>-->
+<!--            <if test="gender != null and gender != ''">gender,</if>-->
+<!--            <if test="birthDate != null">birth_date,</if>-->
+<!--            <if test="age != null">age,</if>-->
+<!--            <if test="dischargeMethod != null">discharge_method,</if>-->
+<!--            <if test="type != null">type,</if>-->
+<!--            <if test="createBy != null and createBy != ''">createBy,</if>-->
+<!--            <if test="createTime != null">createTime,</if>-->
+<!--            <if test="updateBy != null">updateBy,</if>-->
+<!--            <if test="updateTime != null">updateTime,</if>-->
+<!--         </trim>-->
+<!--        <trim prefix="values (" suffix=")" suffixOverrides=",">-->
+<!--            <if test="institutionCode != null and institutionCode != ''">#{institutionCode},</if>-->
+<!--            <if test="institutionName != null and institutionName != ''">#{institutionName},</if>-->
+<!--            <if test="medicalRecordNumber != null and medicalRecordNumber != ''">#{medicalRecordNumber},</if>-->
+<!--            <if test="hospitalizationCount != null">#{hospitalizationCount},</if>-->
+<!--            <if test="admissionDate != null">#{admissionDate},</if>-->
+<!--            <if test="dischargeDate != null">#{dischargeDate},</if>-->
+<!--            <if test="patientName != null and patientName != ''">#{patientName},</if>-->
+<!--            <if test="gender != null and gender != ''">#{gender},</if>-->
+<!--            <if test="birthDate != null">#{birthDate},</if>-->
+<!--            <if test="age != null">#{age},</if>-->
+<!--            <if test="dischargeMethod != null">#{dischargeMethod},</if>-->
+<!--            <if test="type != null">#{type},</if>-->
+<!--            <if test="createBy != null and createBy != ''">#{createBy},</if>-->
+<!--            <if test="createTime != null">#{createTime},</if>-->
+<!--            <if test="updateBy != null">#{updateBy},</if>-->
+<!--            <if test="updateTime != null">#{updateTime},</if>-->
+<!--         </trim>-->
+<!--    </insert>-->
+
+    <update id="updateBingPatientRecord" parameterType="BingPatientRecord">
+        update bing_patient_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="institutionCode != null and institutionCode != ''">institution_code = #{institutionCode},</if>
+            <if test="institutionName != null and institutionName != ''">institution_name = #{institutionName},</if>
+            <if test="medicalRecordNumber != null and medicalRecordNumber != ''">medical_record_number = #{medicalRecordNumber},</if>
+            <if test="hospitalizationCount != null">hospitalization_count = #{hospitalizationCount},</if>
+            <if test="admissionDate != null">admission_date = #{admissionDate},</if>
+            <if test="dischargeDate != null">discharge_date = #{dischargeDate},</if>
+            <if test="patientName != null and patientName != ''">patient_name = #{patientName},</if>
+            <if test="gender != null and gender != ''">gender = #{gender},</if>
+            <if test="birthDate != null">birth_date = #{birthDate},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="dischargeMethod != null">discharge_method = #{dischargeMethod},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="createBy != null and createBy != ''">createBy = #{createBy},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateBy != null">updateBy = #{updateBy},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBingPatientRecordById" parameterType="Long">
+        delete from bing_patient_record where id = #{id}
+    </delete>
+
+    <delete id="deleteBingPatientRecordByIds" parameterType="String">
+        delete from bing_patient_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

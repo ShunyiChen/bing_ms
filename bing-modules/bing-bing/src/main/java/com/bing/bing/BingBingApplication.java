@@ -21,7 +21,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @EnableNacosPropertyDecryption
-//@MapperScan(basePackages = {"com.bing.bing.mapper"})
 public class BingBingApplication
 {
     public static void main(String[] args)

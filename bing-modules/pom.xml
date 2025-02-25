@@ -11,7 +11,7 @@
     <modules>
         <module>bing-bing</module>
         <module>bing-system</module>
-<!--        <module>bing-gen</module>-->
+        <module>bing-gen</module>
         <module>bing-job</module>
         <module>bing-file</module>
 <!--        <module>cbs-filingsystem</module>-->
