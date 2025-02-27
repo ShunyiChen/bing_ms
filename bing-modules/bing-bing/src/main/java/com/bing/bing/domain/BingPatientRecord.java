@@ -16,8 +16,6 @@ import lombok.Data;
 @Data
 public class BingPatientRecord extends BaseEntity
 {
-    private static final long serialVersionUID = 1L;
-
     /** ID */
     private Long id;
 
@@ -76,4 +74,19 @@ public class BingPatientRecord extends BaseEntity
     private Integer pageNum;
     /** pageSize(非字段) 每页数量 */
     private Integer pageSize;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date admissionDateFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date admissionDateTo;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dischargeDateFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dischargeDateTo;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date birthDateFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date birthDateTo;
 }

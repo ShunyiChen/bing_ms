@@ -43,8 +43,14 @@ public class BingPatientRecordController extends BaseController
     @RequiresPermissions("bing:record:add")
     @Log(title = "病案", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BatchAddDTO batchAddDTO)
-    {
+    public AjaxResult add(@RequestBody BatchAddDTO batchAddDTO) {
+        if(batchAddDTO.getData().isEmpty()) {
+           return error("病案列表不能为空");
+        }
+        int count = bingPatientRecordService.checksIfListIsExist(batchAddDTO);
+        if(count > 0) {
+            return error("病案列表不能重复导入");
+        }
         return toAjax(bingPatientRecordService.insertBingPatientRecord(batchAddDTO));
     }
 

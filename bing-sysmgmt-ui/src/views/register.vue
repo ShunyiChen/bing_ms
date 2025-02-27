@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <el-form ref="registerRef" :model="registerForm" :rules="registerRules" class="register-form">
-      <h3 class="title">CBS Application</h3>
+      <h3 class="title">Bing Application</h3>
       <el-form-item prop="username">
         <el-input 
           v-model="registerForm.username" 

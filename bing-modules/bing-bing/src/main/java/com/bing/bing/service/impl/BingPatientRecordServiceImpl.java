@@ -1,6 +1,7 @@
 package com.bing.bing.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.bing.bing.dto.BatchAddDTO;
 import com.bing.common.core.utils.DateUtils;
@@ -12,7 +13,7 @@ import com.bing.bing.domain.BingPatientRecord;
 import com.bing.bing.service.IBingPatientRecordService;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ * 病案Service业务层处理
  * 
  * @author Simeon
  * @date 2025-02-25
@@ -24,10 +25,10 @@ public class BingPatientRecordServiceImpl implements IBingPatientRecordService
     private BingPatientRecordMapper bingPatientRecordMapper;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询病案
      * 
-     * @param id 【请填写功能名称】主键
-     * @return 【请填写功能名称】
+     * @param id 病案主键
+     * @return 病案
      */
     @Override
     public BingPatientRecord selectBingPatientRecordById(Long id)
@@ -36,26 +37,30 @@ public class BingPatientRecordServiceImpl implements IBingPatientRecordService
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询病案列表
      * 
-     * @param bingPatientRecord 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param bingPatientRecord 病案
+     * @return 病案
      */
     @Override
-    public List<BingPatientRecord> selectBingPatientRecordList(BingPatientRecord bingPatientRecord)
-    {
+    public List<BingPatientRecord> selectBingPatientRecordList(BingPatientRecord bingPatientRecord) {
         return bingPatientRecordMapper.selectBingPatientRecordList(bingPatientRecord);
     }
 
+    @Override
+    public int checksIfListIsExist(BatchAddDTO batchAddDTO) {
+        List<String> list = batchAddDTO.getData().stream().map(BingPatientRecord::getMedicalRecordNumber).toList();
+        return bingPatientRecordMapper.checksIfListIsExist(list);
+    }
+
     /**
-     * 新增【请填写功能名称】
+     * 新增病案
      * 
-     * @param batchAddDTO 【请填写功能名称】
+     * @param batchAddDTO 病案
      * @return 结果
      */
     @Override
-    public int insertBingPatientRecord(BatchAddDTO batchAddDTO)
-    {
+    public int insertBingPatientRecord(BatchAddDTO batchAddDTO) {
         batchAddDTO.getData().forEach(e -> {
             e.setCreateBy(SecurityUtils.getUsername());
         });
@@ -63,34 +68,32 @@ public class BingPatientRecordServiceImpl implements IBingPatientRecordService
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改病案
      * 
-     * @param bingPatientRecord 【请填写功能名称】
+     * @param bingPatientRecord 病案
      * @return 结果
      */
     @Override
-    public int updateBingPatientRecord(BingPatientRecord bingPatientRecord)
-    {
+    public int updateBingPatientRecord(BingPatientRecord bingPatientRecord) {
         bingPatientRecord.setUpdateTime(DateUtils.getNowDate());
         return bingPatientRecordMapper.updateBingPatientRecord(bingPatientRecord);
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除病案
      * 
-     * @param ids 需要删除的【请填写功能名称】主键
+     * @param ids 需要删除的病案主键
      * @return 结果
      */
     @Override
-    public int deleteBingPatientRecordByIds(Long[] ids)
-    {
+    public int deleteBingPatientRecordByIds(Long[] ids) {
         return bingPatientRecordMapper.deleteBingPatientRecordByIds(ids);
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除病案信息
      * 
-     * @param id 【请填写功能名称】主键
+     * @param id 病案主键
      * @return 结果
      */
     @Override

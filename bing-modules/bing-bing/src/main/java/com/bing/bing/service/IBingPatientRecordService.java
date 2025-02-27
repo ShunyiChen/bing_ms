@@ -5,7 +5,7 @@ import com.bing.bing.domain.BingPatientRecord;
 import com.bing.bing.dto.BatchAddDTO;
 
 /**
- * 【请填写功能名称】Service接口
+ * 病案Service接口
  * 
  * @author Simeon
  * @date 2025-02-25
@@ -13,50 +13,58 @@ import com.bing.bing.dto.BatchAddDTO;
 public interface IBingPatientRecordService 
 {
     /**
-     * 查询【请填写功能名称】
+     * 查询病案
      * 
-     * @param id 【请填写功能名称】主键
-     * @return 【请填写功能名称】
+     * @param id 病案主键
+     * @return 病案
      */
-    public BingPatientRecord selectBingPatientRecordById(Long id);
+    BingPatientRecord selectBingPatientRecordById(Long id);
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询病案列表
      * 
-     * @param bingPatientRecord 【请填写功能名称】
-     * @return 【请填写功能名称】集合
+     * @param bingPatientRecord 病案
+     * @return 病案集合
      */
-    public List<BingPatientRecord> selectBingPatientRecordList(BingPatientRecord bingPatientRecord);
+    List<BingPatientRecord> selectBingPatientRecordList(BingPatientRecord bingPatientRecord);
 
+    /**
+     * 检查新增病案列表是否已添加过
+     *
+     * @param batchAddDTO
+     * @return 记录数
+     */
+    int checksIfListIsExist(BatchAddDTO batchAddDTO);
+    
     /**
      * 新增【批量添加病案】
      * 
      * @param batchAddDTO 【要添加的病案列表】
      * @return 结果
      */
-    public int insertBingPatientRecord(BatchAddDTO batchAddDTO);
+    int insertBingPatientRecord(BatchAddDTO batchAddDTO);
 
     /**
-     * 修改【请填写功能名称】
+     * 修改病案
      * 
-     * @param bingPatientRecord 【请填写功能名称】
+     * @param bingPatientRecord 病案
      * @return 结果
      */
-    public int updateBingPatientRecord(BingPatientRecord bingPatientRecord);
+    int updateBingPatientRecord(BingPatientRecord bingPatientRecord);
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除病案
      * 
-     * @param ids 需要删除的【请填写功能名称】主键集合
+     * @param ids 需要删除的病案主键集合
      * @return 结果
      */
-    public int deleteBingPatientRecordByIds(Long[] ids);
+    int deleteBingPatientRecordByIds(Long[] ids);
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除病案信息
      * 
-     * @param id 【请填写功能名称】主键
+     * @param id 病案主键
      * @return 结果
      */
-    public int deleteBingPatientRecordById(Long id);
+    int deleteBingPatientRecordById(Long id);
 }

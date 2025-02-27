@@ -35,24 +35,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="institutionName != null  and institutionName != ''"> and institution_name like concat('%', #{institutionName}, '%')</if>
             <if test="medicalRecordNumber != null  and medicalRecordNumber != ''"> and medical_record_number = #{medicalRecordNumber}</if>
             <if test="hospitalizationCount != null "> and hospitalization_count = #{hospitalizationCount}</if>
-            <if test="admissionDate != null "> and admission_date = #{admissionDate}</if>
-            <if test="dischargeDate != null "> and discharge_date = #{dischargeDate}</if>
+            <if test="admissionDateFrom != null and admissionDateTo != null">
+                and admission_date BETWEEN #{admissionDateFrom, javaType=java.util.Date} AND #{admissionDateTo, javaType=java.util.Date}
+            </if>
+            <if test="dischargeDateFrom != null and dischargeDateTo != null">
+                and discharge_date BETWEEN #{dischargeDateFrom, javaType=java.util.Date} AND #{dischargeDateTo, javaType=java.util.Date}
+            </if>
             <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
-            <if test="birthDate != null "> and birth_date = #{birthDate}</if>
+            <if test="birthDateFrom != null and birthDateTo != null">
+                and birth_date BETWEEN #{birthDateFrom, javaType=java.util.Date} AND #{birthDateTo, javaType=java.util.Date}
+            </if>
             <if test="age != null "> and age = #{age}</if>
             <if test="dischargeMethod != null "> and discharge_method = #{dischargeMethod}</if>
             <if test="type != null "> and type = #{type}</if>
-            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>
-            <if test="createTime != null "> and createTime = #{createTime}</if>
-            <if test="updateBy != null  and updateBy != ''"> and updateBy = #{updateBy}</if>
-            <if test="updateTime != null "> and updateTime = #{updateTime}</if>
+<!--            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>-->
+<!--            <if test="createTime != null "> and createTime = #{createTime}</if>-->
+<!--            <if test="updateBy != null  and updateBy != ''"> and updateBy = #{updateBy}</if>-->
+<!--            <if test="updateTime != null "> and updateTime = #{updateTime}</if>-->
         </where>
-    </select>
-    
-    <select id="selectBingPatientRecordById" parameterType="Long" resultMap="BingPatientRecordResult">
-        <include refid="selectBingPatientRecordVo"/>
-        where id = #{id}
     </select>
 
     <insert id="insertBingPatientRecord" parameterType="com.bing.bing.dto.BatchAddDTO">
@@ -64,6 +65,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ,#{item.dischargeDate}, #{item.patientName}, #{item.gender}, #{item.birthDate}, #{item.age}, #{item.dischargeMethod}, #{item.type}, #{item.createBy}, NOW(), #{item.createBy}, NOW())
         </foreach>
     </insert>
+
+    <select id="checksIfListIsExist">
+        select count(medical_record_number) from bing_patient_record where medical_record_number in
+        <foreach item="number" collection="list" open="(" separator="," close=")">
+            #{number}
+        </foreach>
+    </select>
+
+    <select id="selectBingPatientRecordById" parameterType="Long" resultMap="BingPatientRecordResult">
+        <include refid="selectBingPatientRecordVo"/>
+        where id = #{id}
+    </select>
 
 <!--    <insert id="insertBingPatientRecord" parameterType="BingPatientRecord" useGeneratedKeys="true" keyProperty="id">-->
 <!--        insert into bing_patient_record-->
