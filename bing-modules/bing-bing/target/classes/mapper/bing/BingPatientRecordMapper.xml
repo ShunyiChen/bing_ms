@@ -60,11 +60,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="insertBingPatientRecord" parameterType="com.bing.bing.dto.BatchAddDTO">
         INSERT INTO bing_patient_record
-            (institution_code, institution_name, medical_record_number, hospitalization_count, admission_date, discharge_date, patient_name, gender, birth_date, age, discharge_method, `type`, createBy, createTime, updateBy, updateTime)
+            (institution_code, institution_name, medical_record_number, hospitalization_count, admission_date, discharge_date, patient_name, gender, birth_date, age, discharge_method, `type`, status, createBy, createTime, updateBy, updateTime)
         VALUES
         <foreach collection="data" item="item" separator=",">
             (#{item.institutionCode}, #{item.institutionName}, #{item.medicalRecordNumber}, #{item.hospitalizationCount}, #{item.admissionDate}
-            ,#{item.dischargeDate}, #{item.patientName}, #{item.gender}, #{item.birthDate}, #{item.age}, #{item.dischargeMethod}, #{item.type}, #{item.createBy}, NOW(), #{item.createBy}, NOW())
+            ,#{item.dischargeDate}, #{item.patientName}, #{item.gender}, #{item.birthDate}, #{item.age}, #{item.dischargeMethod}, #{item.type}, 'New' ,#{item.createBy}, NOW(), #{item.createBy}, NOW())
         </foreach>
     </insert>
 

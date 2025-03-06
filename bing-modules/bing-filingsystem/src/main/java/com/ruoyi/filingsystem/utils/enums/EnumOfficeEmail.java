@@ -7,17 +7,11 @@ import lombok.Getter;
  */
 @Getter
 public enum EnumOfficeEmail {
-//    BJ(1L,"BJFilingRoom@cn.ey.com;"),
-//    GZ(2L,"GZFilingRoom@cn.ey.com;"),
-//    HK(3L,"HKFilingroom@hk.ey.com;"),
-//    SH(4L,"SHFilingRoom@cn.ey.com;"),
-//    SZ(5L,"SZFilingRoom@cn.ey.com;");
-
-    BJ(1L,"Simeon.Chen@cn.ey.com;"),
-    GZ(2L,"Simeon.Chen@cn.ey.com;"),
-    HK(3L,"Simeon.Chen@cn.ey.com;"),
-    SH(4L,"Simeon.Chen@cn.ey.com;"),
-    SZ(5L,"Simeon.Chen@cn.ey.com;");
+    BJ(1L,"hello123@1987.com;"),
+    GZ(2L,"hello123@1987.com;"),
+    HK(3L,"hello123@1987.com;"),
+    SH(4L,"hello123@1987.com;"),
+    SZ(5L,"hello123@1987.com;");
 
     private final Long deptId;
     private final String email;

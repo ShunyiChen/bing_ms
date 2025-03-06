@@ -353,7 +353,7 @@ public class FilingFileProfileServiceImpl implements IFilingFileProfileService {
         tableBuilder.append(bodyEnd);
         tableBuilder.append("</body></html>");
         String HtmlBody = tableBuilder.toString();
-        String[] emailList1 = {"Simeon.Chen@cn.ey.com"};// emailsList.split(";");
+        String[] emailList1 = {"1244@1234.com"};// emailsList.split(";");
         SendEmailUtil.sendEmail(emailList1,title,HtmlBody,OfficeEmail);
     }
 
