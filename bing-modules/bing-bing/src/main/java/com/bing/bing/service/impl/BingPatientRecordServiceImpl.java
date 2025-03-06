@@ -36,6 +36,11 @@ public class BingPatientRecordServiceImpl implements IBingPatientRecordService
         return bingPatientRecordMapper.selectBingPatientRecordById(id);
     }
 
+    @Override
+    public BingPatientRecord findByMedicalRecordNumber(String medicalRecordNumber) {
+        return bingPatientRecordMapper.findByMedicalRecordNumber(medicalRecordNumber);
+    }
+
     /**
      * 查询病案列表
      * 
@@ -75,7 +80,6 @@ public class BingPatientRecordServiceImpl implements IBingPatientRecordService
      */
     @Override
     public int updateBingPatientRecord(BingPatientRecord bingPatientRecord) {
-        bingPatientRecord.setUpdateTime(DateUtils.getNowDate());
         return bingPatientRecordMapper.updateBingPatientRecord(bingPatientRecord);
     }
 

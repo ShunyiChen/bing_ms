@@ -21,6 +21,14 @@ import com.bing.bing.dto.BatchAddDTO;
      BingPatientRecord selectBingPatientRecordById(Long id);
 
     /**
+     * 根据病案号查询病案详细信息
+     *
+     * @param medicalRecordNumber   病案号
+     * @return
+     */
+    BingPatientRecord findByMedicalRecordNumber(String medicalRecordNumber);
+
+    /**
      * 查询病案列表
      * 
      * @param bingPatientRecord 病案

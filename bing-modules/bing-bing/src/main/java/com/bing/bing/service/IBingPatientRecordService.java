@@ -13,12 +13,12 @@ import com.bing.bing.dto.BatchAddDTO;
 public interface IBingPatientRecordService 
 {
     /**
-     * 查询病案
-     * 
-     * @param id 病案主键
-     * @return 病案
+     * 通过病案号获取病案详细信息
+     *
+     * @param medicalRecordNumber 病案号
+     * @return
      */
-    BingPatientRecord selectBingPatientRecordById(Long id);
+    BingPatientRecord findByMedicalRecordNumber(String medicalRecordNumber);
 
     /**
      * 查询病案列表
@@ -67,4 +67,12 @@ public interface IBingPatientRecordService
      * @return 结果
      */
     int deleteBingPatientRecordById(Long id);
+
+    /**
+     * 查询病案
+     *
+     * @param id 病案主键
+     * @return 病案
+     */
+    BingPatientRecord selectBingPatientRecordById(Long id);
 }

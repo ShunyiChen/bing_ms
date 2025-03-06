@@ -3,7 +3,6 @@ package com.bing.bing.controller;
 import java.util.List;
 
 import com.bing.bing.dto.BatchAddDTO;
-import com.bing.common.core.utils.poi.ExcelUtil;
 import com.bing.common.core.web.controller.BaseController;
 import com.bing.common.core.web.domain.AjaxResult;
 import com.bing.common.core.web.page.TableDataInfo;
@@ -11,12 +10,9 @@ import com.bing.common.log.annotation.Log;
 import com.bing.common.log.enums.BusinessType;
 import com.bing.common.security.annotation.RequiresPermissions;
 import com.github.pagehelper.PageHelper;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,9 +63,18 @@ public class BingPatientRecordController extends BaseController
         return getDataTable(list);
     }
 
-    /**
-     * 导出病案列表
+   /**
+     * 根据病案号查询病案详细信息
      */
+    @RequiresPermissions("bing:record:query")
+    @GetMapping(value = "/{medicalRecordNumber}")
+    public AjaxResult findByMedicalRecordNumber(@PathVariable("medicalRecordNumber") String medicalRecordNumber) {
+        return success(bingPatientRecordService.findByMedicalRecordNumber(medicalRecordNumber));
+    }
+
+//    /**
+//     * 导出病案列表
+//     */
 //    @RequiresPermissions("bing:record:export")
 //    @Log(title = "病案", businessType = BusinessType.EXPORT)
 //    @PostMapping("/export")
@@ -80,15 +85,15 @@ public class BingPatientRecordController extends BaseController
 //        util.exportExcel(response, list, "病案数据");
 //    }
 //
-//    /**
-//     * 获取病案详细信息
-//     */
-//    @RequiresPermissions("bing:record:query")
-//    @GetMapping(value = "/{id}")
-//    public AjaxResult getInfo(@PathVariable("id") Long id)
-//    {
-//        return success(bingPatientRecordService.selectBingPatientRecordById(id));
-//    }
+    /**
+     * 获取病案详细信息
+     */
+    @RequiresPermissions("bing:record:query")
+    @GetMapping(value = "/id/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id)
+    {
+        return success(bingPatientRecordService.selectBingPatientRecordById(id));
+    }
 //
 //    /**
 //     * 新增病案
@@ -101,16 +106,16 @@ public class BingPatientRecordController extends BaseController
 //        return toAjax(bingPatientRecordService.insertBingPatientRecord(bingPatientRecord));
 //    }
 //
-//    /**
-//     * 修改病案
-//     */
-//    @RequiresPermissions("bing:record:edit")
-//    @Log(title = "病案", businessType = BusinessType.UPDATE)
-//    @PutMapping
-//    public AjaxResult edit(@RequestBody BingPatientRecord bingPatientRecord)
-//    {
-//        return toAjax(bingPatientRecordService.updateBingPatientRecord(bingPatientRecord));
-//    }
+    /**
+     * 修改病案
+     */
+    @RequiresPermissions("bing:record:edit")
+    @Log(title = "病案", businessType = BusinessType.UPDATE)
+    @PostMapping("/update")
+    public AjaxResult edit(@RequestBody BingPatientRecord bingPatientRecord)
+    {
+        return toAjax(bingPatientRecordService.updateBingPatientRecord(bingPatientRecord));
+    }
 //
 //    /**
 //     * 删除病案

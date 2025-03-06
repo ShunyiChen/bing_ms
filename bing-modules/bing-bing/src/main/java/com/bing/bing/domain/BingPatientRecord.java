@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
- * 【请填写功能名称】对象 bing_patient_record
+ * 【病案记录】对象 bing_patient_record
  * 
  * @author Simeon
  * @date 2025-02-25
@@ -69,6 +69,9 @@ public class BingPatientRecord extends BaseEntity
     /** 病案类型 0-西医 1-中医 */
     @Excel(name = "病案类型 0-西医 1-中医")
     private Long type;
+
+    @Excel(name = "病案状态 New (新建)/Submitted (已提交)/Modified (有改动)")
+    private String status;
 
     /** pageNum(非字段) 页数 */
     private Integer pageNum;

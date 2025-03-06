@@ -18,6 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="age"    column="age"    />
         <result property="dischargeMethod"    column="discharge_method"    />
         <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
         <result property="createBy"    column="createBy"    />
         <result property="createTime"    column="createTime"    />
         <result property="updateBy"    column="updateBy"    />
@@ -25,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBingPatientRecordVo">
-        select id, institution_code, institution_name, medical_record_number, hospitalization_count, admission_date, discharge_date, patient_name, gender, birth_date, age, discharge_method, type, createBy, createTime, updateBy, updateTime from bing_patient_record
+        select id, institution_code, institution_name, medical_record_number, hospitalization_count, admission_date, discharge_date, patient_name, gender, birth_date, age, discharge_method, type, status, createBy, createTime, updateBy, updateTime from bing_patient_record
     </sql>
 
     <select id="selectBingPatientRecordList" parameterType="BingPatientRecord" resultMap="BingPatientRecordResult">
@@ -49,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="age != null "> and age = #{age}</if>
             <if test="dischargeMethod != null "> and discharge_method = #{dischargeMethod}</if>
             <if test="type != null "> and type = #{type}</if>
+            <if test="status != null "> and status = #{status}</if>
 <!--            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>-->
 <!--            <if test="createTime != null "> and createTime = #{createTime}</if>-->
 <!--            <if test="updateBy != null  and updateBy != ''"> and updateBy = #{updateBy}</if>-->
@@ -73,10 +75,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </select>
 
-    <select id="selectBingPatientRecordById" parameterType="Long" resultMap="BingPatientRecordResult">
+    <select id="findByMedicalRecordNumber" parameterType="String" resultMap="BingPatientRecordResult">
         <include refid="selectBingPatientRecordVo"/>
-        where id = #{id}
+        where medical_record_number = #{medicalRecordNumber}
     </select>
+
+    <!--    <select id="selectBingPatientRecordById" parameterType="Long" resultMap="BingPatientRecordResult">-->
+<!--        <include refid="selectBingPatientRecordVo"/>-->
+<!--        where id = #{id}-->
+<!--    </select>-->
 
 <!--    <insert id="insertBingPatientRecord" parameterType="BingPatientRecord" useGeneratedKeys="true" keyProperty="id">-->
 <!--        insert into bing_patient_record-->
@@ -133,10 +140,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="age != null">age = #{age},</if>
             <if test="dischargeMethod != null">discharge_method = #{dischargeMethod},</if>
             <if test="type != null">type = #{type},</if>
-            <if test="createBy != null and createBy != ''">createBy = #{createBy},</if>
-            <if test="createTime != null">createTime = #{createTime},</if>
-            <if test="updateBy != null">updateBy = #{updateBy},</if>
-            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+<!--            <if test="createBy != null and createBy != ''">createBy = #{createBy},</if>-->
+<!--            <if test="createTime != null">createTime = #{createTime},</if>-->
+<!--            <if test="updateBy != null">updateBy = #{updateBy},</if>-->
+            updateBy = #{updateBy},
+<!--            <if test="updateTime != null">updateTime = #{updateTime},</if>-->
+            updateTime = NOW()
         </trim>
         where id = #{id}
     </update>
