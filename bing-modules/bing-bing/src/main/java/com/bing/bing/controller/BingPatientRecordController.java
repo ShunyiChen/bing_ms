@@ -127,4 +127,16 @@ public class BingPatientRecordController extends BaseController
 //    {
 //        return toAjax(bingPatientRecordService.deleteBingPatientRecordByIds(ids));
 //    }
+
+    /**
+     * 批量更新病案
+     */
+    @RequiresPermissions("bing:record:edit")
+    @PostMapping("/batchUpdate")
+    public AjaxResult batchUpdate(@RequestBody BingPatientRecord bingPatientRecord)
+    {
+        List<BingPatientRecord> list = bingPatientRecordService.selectBingPatientRecordList(bingPatientRecord);
+
+        return success();
+    }
 }

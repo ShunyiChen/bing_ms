@@ -3,6 +3,7 @@ package com.bing.bing.controller;
 import java.util.List;
 
 import com.bing.bing.domain.BingFiles;
+import com.bing.bing.dto.AddFileDTO;
 import com.bing.bing.service.IBingFilesService;
 import com.bing.common.core.utils.poi.ExcelUtil;
 import com.bing.common.core.web.controller.BaseController;
@@ -55,8 +56,7 @@ public class BingFilesController extends BaseController
      */
     @RequiresPermissions("bing:files:list")
     @PostMapping("/findFiles")
-    public List<BingFiles> getFileList(BingFiles param)
-    {
+    public List<BingFiles> findFiles(@RequestBody BingFiles param) {
         return bingFilesService.selectBingFilesList(param);
     }
 
@@ -89,9 +89,9 @@ public class BingFilesController extends BaseController
     @RequiresPermissions("bing:files:add")
     @Log(title = "【病案材料】", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BingFiles bingFiles)
-    {
-        return toAjax(bingFilesService.insertBingFiles(bingFiles));
+    public AjaxResult add(@RequestBody BingFiles bingFiles) {
+        bingFilesService.insertBingFiles(bingFiles);
+        return success(new AddFileDTO(bingFiles.getId()));
     }
 
     /**

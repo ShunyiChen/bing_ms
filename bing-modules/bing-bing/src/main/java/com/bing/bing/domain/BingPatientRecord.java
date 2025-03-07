@@ -92,4 +92,14 @@ public class BingPatientRecord extends BaseEntity
     private Date birthDateFrom;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthDateTo;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createTimeFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createTimeTo;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date updateTimeFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date updateTimeTo;
 }

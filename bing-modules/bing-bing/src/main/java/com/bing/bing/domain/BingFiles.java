@@ -1,10 +1,7 @@
 package com.bing.bing.domain;
 
-import java.util.Date;
-
 import com.bing.common.core.annotation.Excel;
 import com.bing.common.core.web.domain.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 
@@ -14,6 +11,7 @@ import lombok.Data;
  * @author Simeon
  * @date 2025-03-04
  */
+@Data
 public class BingFiles extends BaseEntity
 {
     /** 主键ID */
@@ -42,60 +40,4 @@ public class BingFiles extends BaseEntity
     /** 文件记录状态，uploaded/waiting upload */
     @Excel(name = "文件记录状态，uploaded/waiting upload")
     private String status;
-
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setRecordId(Long recordId) 
-    {
-        this.recordId = recordId;
-    }
-
-    public Long getRecordId() 
-    {
-        return recordId;
-    }
-    public void setClassificationName(String classificationName) 
-    {
-        this.classificationName = classificationName;
-    }
-
-    public String getClassificationName() 
-    {
-        return classificationName;
-    }
-    public void setFileName(String fileName) 
-    {
-        this.fileName = fileName;
-    }
-
-    public String getFileName() 
-    {
-        return fileName;
-    }
-    public void setFilePath(String filePath) 
-    {
-        this.filePath = filePath;
-    }
-
-    public String getFilePath() 
-    {
-        return filePath;
-    }
-    public void setStatus(String status) 
-    {
-        this.status = status;
-    }
-
-    public String getStatus() 
-    {
-        return status;
-    }
-
 }

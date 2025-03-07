@@ -51,10 +51,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dischargeMethod != null "> and discharge_method = #{dischargeMethod}</if>
             <if test="type != null "> and type = #{type}</if>
             <if test="status != null "> and status = #{status}</if>
-<!--            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>-->
-<!--            <if test="createTime != null "> and createTime = #{createTime}</if>-->
-<!--            <if test="updateBy != null  and updateBy != ''"> and updateBy = #{updateBy}</if>-->
-<!--            <if test="updateTime != null "> and updateTime = #{updateTime}</if>-->
+            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>
+            <if test="createTimeFrom != null and createTimeTo != null">
+                and createTime BETWEEN #{createTimeFrom, javaType=java.util.Date} and #{createTimeTo, javaType=java.util.Date}
+            </if>
+            <if test="updateBy != null  and updateBy != ''"> and updateBy = #{updateBy}</if>
+            <if test="updateTimeFrom != null and updateTimeTo != null">
+                and updateTime BETWEEN #{updateTimeFrom, javaType=java.util.Date} and #{updateTimeTo, javaType=java.util.Date}
+            </if>
         </where>
     </select>
 
@@ -80,7 +84,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where medical_record_number = #{medicalRecordNumber}
     </select>
 
-    <!--    <select id="selectBingPatientRecordById" parameterType="Long" resultMap="BingPatientRecordResult">-->
+<!--    <update id="batchUpdateStatus">-->
+<!--        update bing_patient_record-->
+<!--            set status = ''-->
+<!--        where medical_record_number in-->
+<!--        <foreach collection="fileIDs" item="fileID" open="(" close=")" separator=",">-->
+<!--            #{fileID}-->
+<!--        </foreach>-->
+<!--    </update>-->
+
+<!--    <select id="selectBingPatientRecordById" parameterType="Long" resultMap="BingPatientRecordResult">-->
 <!--        <include refid="selectBingPatientRecordVo"/>-->
 <!--        where id = #{id}-->
 <!--    </select>-->
