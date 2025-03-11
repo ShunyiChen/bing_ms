@@ -1,6 +1,8 @@
 package com.bing.bing.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.bing.common.core.annotation.Excel;
 import com.bing.common.core.web.domain.BaseEntity;
@@ -102,4 +104,7 @@ public class BingPatientRecord extends BaseEntity
     private Date updateTimeFrom;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateTimeTo;
+
+    /** 返回待上传材料列表 */
+    private List<BingFiles> list = new ArrayList<>();
 }

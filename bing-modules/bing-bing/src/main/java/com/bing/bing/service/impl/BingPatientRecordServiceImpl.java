@@ -1,16 +1,14 @@
 package com.bing.bing.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.bing.bing.domain.BingPatientRecord;
 import com.bing.bing.dto.BatchAddDTO;
-import com.bing.common.core.utils.DateUtils;
+import com.bing.bing.mapper.BingPatientRecordMapper;
+import com.bing.bing.service.IBingPatientRecordService;
 import com.bing.common.security.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.bing.bing.mapper.BingPatientRecordMapper;
-import com.bing.bing.domain.BingPatientRecord;
-import com.bing.bing.service.IBingPatientRecordService;
+
+import java.util.List;
 
 /**
  * 病案Service业务层处理

@@ -31,7 +31,7 @@ public class AESUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(complexAESEncrypt("admin"));
-        System.out.println(complexAESEncrypt("Admin123"));
+        System.out.println(complexAESEncrypt("r-uf6v74xvpal7w1luuv"));
+//        System.out.println(complexAESEncrypt("Admin123"));
     }
 }

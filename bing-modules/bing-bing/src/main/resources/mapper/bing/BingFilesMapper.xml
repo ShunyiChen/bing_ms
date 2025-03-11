@@ -34,7 +34,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null "> and updateTime = #{updateTime}</if>
         </where>
     </select>
-    
+
+    <select id="selectBingFilesByRecordIds" resultMap="BingFilesResult">
+        select
+            bf.*
+        from
+            bing_patient_record bpr
+            left join bing_files bf on bf.record_id = bpr.id
+        where
+            bf.status = 'Waiting Upload'
+            and bpr.id in
+        <foreach item="recordId" collection="list" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </select>
+
     <select id="selectBingFilesById" parameterType="Long" resultMap="BingFilesResult">
         <include refid="selectBingFilesVo"/>
         where id = #{id}
@@ -83,8 +97,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null and status != ''">status = #{status},</if>
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="updateBy != null">update_by = #{updateBy},</if>
-            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            update_by = #{updateBy},
+            updateTime = NOW()
         </trim>
         where id = #{id}
     </update>

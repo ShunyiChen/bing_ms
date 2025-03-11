@@ -1,8 +1,12 @@
 package com.bing.bing.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.bing.bing.domain.BingFiles;
 import com.bing.bing.dto.BatchAddDTO;
+import com.bing.bing.service.IBingFilesService;
 import com.bing.common.core.web.controller.BaseController;
 import com.bing.common.core.web.domain.AjaxResult;
 import com.bing.common.core.web.page.TableDataInfo;
@@ -33,6 +37,9 @@ public class BingPatientRecordController extends BaseController
     @Autowired
     private IBingPatientRecordService bingPatientRecordService;
 
+    @Autowired
+    private IBingFilesService bingFilesService;
+
     /**
      * 批量新增病案
      */
@@ -61,6 +68,55 @@ public class BingPatientRecordController extends BaseController
         PageHelper.startPage(bingPatientRecord.getPageNum(), bingPatientRecord.getPageSize()).setReasonable(true);
         List<BingPatientRecord> list = bingPatientRecordService.selectBingPatientRecordList(bingPatientRecord);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询所有病案列表（分页带文件列表）
+     *
+     * @param bingPatientRecord
+     * @return
+     */
+    @RequiresPermissions("bing:record:list")
+    @PostMapping("/listWithFiles")
+    public TableDataInfo listWithFiles(@RequestBody BingPatientRecord bingPatientRecord) {
+        PageHelper.startPage(bingPatientRecord.getPageNum(), bingPatientRecord.getPageSize()).setReasonable(true);
+        List<BingPatientRecord> list = bingPatientRecordService.selectBingPatientRecordList(bingPatientRecord);
+        // 获取待上传文件列表
+        if(!list.isEmpty()) {
+            List<Long> recordIdList = list.stream().map(BingPatientRecord::getId).toList();
+            List<BingFiles> fileList = bingFilesService.selectBingFilesByRecordIds(recordIdList);
+            // 按 recordId 分组
+            Map<Long, List<BingFiles>> groupedFiles = fileList.stream()
+                    .collect(Collectors.groupingBy(BingFiles::getRecordId));
+            for(BingPatientRecord bpr: list) {
+                bpr.setList(groupedFiles.get(bpr.getId()));
+            }
+        }
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询所有病案列表（不分页且带文件列表）
+     *
+     * @param bingPatientRecord
+     * @return
+     */
+    @RequiresPermissions("bing:record:list")
+    @PostMapping("/getAllWithFiles")
+    public AjaxResult getAllWithFiles(@RequestBody BingPatientRecord bingPatientRecord) {
+        List<BingPatientRecord> list = bingPatientRecordService.selectBingPatientRecordList(bingPatientRecord);
+        // 获取待上传文件列表
+        if(!list.isEmpty()) {
+            List<Long> recordIdList = list.stream().map(BingPatientRecord::getId).toList();
+            List<BingFiles> fileList = bingFilesService.selectBingFilesByRecordIds(recordIdList);
+            // 按 recordId 分组
+            Map<Long, List<BingFiles>> groupedFiles = fileList.stream()
+                    .collect(Collectors.groupingBy(BingFiles::getRecordId));
+            for(BingPatientRecord bpr: list) {
+                bpr.setList(groupedFiles.get(bpr.getId()));
+            }
+        }
+        return success(list);
     }
 
    /**

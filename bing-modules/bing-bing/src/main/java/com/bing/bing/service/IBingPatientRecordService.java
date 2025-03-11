@@ -1,6 +1,7 @@
 package com.bing.bing.service;
 
 import java.util.List;
+
 import com.bing.bing.domain.BingPatientRecord;
 import com.bing.bing.dto.BatchAddDTO;
 

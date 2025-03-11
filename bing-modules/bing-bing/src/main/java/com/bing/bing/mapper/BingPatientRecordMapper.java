@@ -1,8 +1,9 @@
 package com.bing.bing.mapper;
 
-import java.util.List;
 import com.bing.bing.domain.BingPatientRecord;
 import com.bing.bing.dto.BatchAddDTO;
+
+import java.util.List;
 
 /**
  * 病案Mapper接口
