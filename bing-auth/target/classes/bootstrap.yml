@@ -14,20 +14,20 @@ spring:
     nacos:
       discovery:
         # 服务注册地址
-        server-addr: mse-ad30c000-p.nacos-ans.mse.aliyuncs.com:8848
+        server-addr: mse-ea2d0d00-p.nacos-ans.mse.aliyuncs.com:8848
         # 向nacos发送心跳间隔
         heart-beat-interval: 3
         # 命名空间
-        namespace: d8b20250-e8e1-4b82-b37f-edb95b2e9004
+        namespace: a8835531-911f-44ee-a554-a5d4340c53cb
         # 组
         group: DEV_GROUP
       config:
         # 配置中心地址
-        server-addr: mse-ad30c000-p.nacos-ans.mse.aliyuncs.com:8848
+        server-addr: mse-ea2d0d00-p.nacos-ans.mse.aliyuncs.com:8848
         # 配置文件格式
         file-extension: yml
         # 命名空间
-        namespace: d8b20250-e8e1-4b82-b37f-edb95b2e9004
+        namespace: a8835531-911f-44ee-a554-a5d4340c53cb
         # 组
         group: DEV_GROUP
         # 共享配置
